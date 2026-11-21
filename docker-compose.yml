@@ -26,6 +26,7 @@ services:
       postgres:
         condition: service_healthy
     environment:
+      SPRING_PROFILES_ACTIVE: postgres
       DB_URL: jdbc:postgresql://postgres:5432/${DB_NAME:-nordicagent}
       DB_USER: ${DB_USER:-nordicagent}
       DB_PASSWORD: ${DB_PASSWORD:-change_me_in_env}
