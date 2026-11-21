@@ -4,27 +4,28 @@
   const yearEl = document.getElementById("year");
   if (yearEl) yearEl.textContent = String(new Date().getFullYear());
 
-  // Enkel interaktiv 3D-inspirerad partikelanimation på hero-canvasen
+  // Dämpad 3D-partikelbakgrund bakom produktmockupen (pausar vid reduced-motion)
   const canvas = document.getElementById("heroCanvas");
-  if (canvas && canvas.getContext) {
+  const reducedMotion = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  if (canvas && canvas.getContext && !reducedMotion) {
     const ctx = canvas.getContext("2d");
     const resize = () => {
       canvas.width = canvas.clientWidth || 420;
-      canvas.height = canvas.clientHeight || 340;
+      canvas.height = canvas.clientHeight || 380;
     };
     resize();
     window.addEventListener("resize", resize);
 
-    const nodes = Array.from({ length: 42 }, (_, i) => ({
-      a: (i / 42) * Math.PI * 2,
-      r: 55 + (i % 5) * 22,
-      speed: 0.004 + (i % 4) * 0.002,
+    const nodes = Array.from({ length: 36 }, (_, i) => ({
+      a: (i / 36) * Math.PI * 2,
+      r: 55 + (i % 5) * 24,
+      speed: 0.003 + (i % 4) * 0.0015,
       phase: i * 0.7
     }));
 
     let t = 0;
     function draw() {
-      t += 0.015;
+      t += 0.012;
       const w = canvas.width;
       const h = canvas.height;
       ctx.clearRect(0, 0, w, h);
@@ -39,7 +40,7 @@
         return { x, y };
       });
 
-      ctx.strokeStyle = "rgba(20, 184, 166, 0.25)";
+      ctx.strokeStyle = "rgba(13, 148, 136, 0.22)";
       ctx.lineWidth = 1;
       for (let i = 0; i < pts.length; i++) {
         for (let j = i + 1; j < pts.length; j++) {
@@ -55,9 +56,9 @@
       }
 
       pts.forEach((p) => {
-        ctx.fillStyle = "#38bdf8";
+        ctx.fillStyle = "#0f4c81";
         ctx.beginPath();
-        ctx.arc(p.x, p.y, 3, 0, Math.PI * 2);
+        ctx.arc(p.x, p.y, 2.5, 0, Math.PI * 2);
         ctx.fill();
       });
 
@@ -66,11 +67,12 @@
     draw();
   }
 
-  // Live demokalender mot Spring Boot API (/api/demo/slots & /api/demo/book)
+  // Exempelkalender
   let currentIndustry = "tandlakare";
   let currentDay = "idag";
   const slotsGrid = document.getElementById("slotsGrid");
   const demoFeedback = document.getElementById("demoFeedback");
+  const STATUS_LABEL = { free: "Ledig", busy: "Upptagen", deal: "Sista minuten" };
 
   async function loadSlots() {
     if (!slotsGrid) return;
@@ -89,14 +91,19 @@
         t.className = "slot-time";
         t.textContent = slot.time;
 
-        const m = document.createElement("span");
-        m.className = "slot-meta";
-        m.textContent = slot.status === "busy" ? "Upptagen" : `${slot.service} · ${slot.price}`;
+        const st = document.createElement("span");
+        st.className = "slot-status";
+        st.textContent = STATUS_LABEL[slot.status] || "";
 
         btn.appendChild(t);
-        btn.appendChild(m);
+        btn.appendChild(st);
 
         if (slot.status !== "busy") {
+          const m = document.createElement("span");
+          m.className = "slot-meta";
+          m.textContent = `${slot.service}, ${slot.price}`;
+          btn.appendChild(m);
+
           btn.addEventListener("click", async () => {
             const r = await fetch("/api/demo/book", {
               method: "POST",
@@ -114,14 +121,18 @@
         slotsGrid.appendChild(btn);
       });
     } catch {
-      slotsGrid.textContent = "Kunde inte hämta tider från /api/demo/slots.";
+      slotsGrid.textContent = "Kunde inte ladda exempelkalendern just nu.";
     }
   }
 
   document.querySelectorAll("[data-industry]").forEach((btn) => {
     btn.addEventListener("click", () => {
-      document.querySelectorAll("[data-industry]").forEach((b) => b.classList.remove("active"));
+      document.querySelectorAll("[data-industry]").forEach((b) => {
+        b.classList.remove("active");
+        b.setAttribute("aria-pressed", "false");
+      });
       btn.classList.add("active");
+      btn.setAttribute("aria-pressed", "true");
       currentIndustry = btn.getAttribute("data-industry") || "tandlakare";
       if (demoFeedback) demoFeedback.style.display = "none";
       loadSlots();
@@ -130,8 +141,12 @@
 
   document.querySelectorAll("[data-day]").forEach((btn) => {
     btn.addEventListener("click", () => {
-      document.querySelectorAll("[data-day]").forEach((b) => b.classList.remove("active"));
+      document.querySelectorAll("[data-day]").forEach((b) => {
+        b.classList.remove("active");
+        b.setAttribute("aria-pressed", "false");
+      });
       btn.classList.add("active");
+      btn.setAttribute("aria-pressed", "true");
       currentDay = btn.getAttribute("data-day") || "idag";
       if (demoFeedback) demoFeedback.style.display = "none";
       loadSlots();
@@ -140,44 +155,78 @@
 
   loadSlots();
 
-  // AI-chatt demo
+  // Dela din idé live & fråga AI-assistenten
   const chatForm = document.getElementById("chatForm");
   const chatInput = document.getElementById("chatInput");
   const chatLog = document.getElementById("chatLog");
-  if (chatForm && chatInput && chatLog) {
+  const sendIdeaBtn = document.getElementById("sendIdeaToForm");
+  let lastCustomerIdea = "";
+
+  async function askAssistant(text) {
+    const q = text.trim();
+    if (!q || !chatLog) return;
+    lastCustomerIdea = q;
+
+    const u = document.createElement("div");
+    u.className = "chat-msg chat-user";
+    u.textContent = q;
+    chatLog.appendChild(u);
+
+    let replyText = "Spännande idé! Vi kan anpassa bokning, kundchatt och mailsvar efter era behov.";
+    try {
+      const res = await fetch("/api/demo/assistant", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ message: q })
+      });
+      if (res.ok) {
+        const data = await res.json();
+        if (data.reply) replyText = data.reply;
+      }
+    } catch {
+      // använd fallback-svaret ovan
+    }
+
+    const b = document.createElement("div");
+    b.className = "chat-msg chat-bot";
+    b.textContent = replyText;
+    chatLog.appendChild(b);
+    chatLog.scrollTop = chatLog.scrollHeight;
+  }
+
+  if (chatForm && chatInput) {
     chatForm.addEventListener("submit", (e) => {
       e.preventDefault();
-      const q = chatInput.value.trim();
-      if (!q) return;
-
-      const u = document.createElement("div");
-      u.className = "chat-msg chat-user";
-      u.textContent = q;
-
-      const b = document.createElement("div");
-      b.className = "chat-msg chat-bot";
-      const low = q.toLowerCase();
-      if (low.includes("sista") || low.includes("50")) {
-        b.textContent = "Gula tider i kalendern är sista minuten med -50 % rabatt – klicka på en för att testa live-API:et!";
-      } else if (low.includes("gdpr") || low.includes("säker")) {
-        b.textContent = "Startsidan är publik, medan /api/admin/** är skyddat med Spring Security och databasen följer GDPR-dataminimering.";
-      } else {
-        b.textContent = "Tack för din fråga! I er skarpa AI-agent tränar vårt team svaren utifrån era tjänster, priser och kalender.";
-      }
-
-      chatLog.appendChild(u);
-      chatLog.appendChild(b);
-      chatLog.scrollTop = chatLog.scrollHeight;
+      askAssistant(chatInput.value);
       chatInput.value = "";
     });
   }
 
-  // Kontaktformulär -> POST /api/leads (sparas i databas!)
+  document.querySelectorAll("[data-idea]").forEach((chip) => {
+    chip.addEventListener("click", () => {
+      const idea = chip.getAttribute("data-idea") || "";
+      askAssistant(idea);
+    });
+  });
+
+  if (sendIdeaBtn) {
+    sendIdeaBtn.addEventListener("click", () => {
+      const msgEl = document.getElementById("message");
+      if (msgEl && lastCustomerIdea) {
+        msgEl.value = lastCustomerIdea;
+      }
+      const contactSection = document.getElementById("kontakt");
+      if (contactSection) contactSection.scrollIntoView({ behavior: "smooth" });
+    });
+  }
+
+  // Kontaktformulär med riktig felhantering & honeypot
   const contactForm = document.getElementById("contactForm");
   const formStatus = document.getElementById("formStatus");
   if (contactForm && formStatus) {
     contactForm.addEventListener("submit", async (e) => {
       e.preventDefault();
+      const website = (document.getElementById("website") || { value: "" }).value.trim();
       const payload = {
         name: document.getElementById("name").value.trim(),
         email: document.getElementById("email").value.trim(),
@@ -191,8 +240,14 @@
 
       formStatus.className = "form-status";
       if (!payload.name || !payload.email || !payload.company || !payload.gdprConsent) {
-        formStatus.textContent = "Fyll i namn, e-post, företag och godkänn GDPR.";
+        formStatus.textContent = "Fyll i namn, e-post, företag och godkänn integritetspolicyn.";
         formStatus.classList.add("error");
+        return;
+      }
+
+      if (website) {
+        formStatus.textContent = `Tack ${payload.name}! Vi hör av oss inom en arbetsdag.`;
+        formStatus.classList.add("success");
         return;
       }
 
@@ -203,12 +258,11 @@
           body: JSON.stringify(payload)
         });
         if (!res.ok) throw new Error();
-        const saved = await res.json();
-        formStatus.textContent = `Tack ${payload.name}! Förfrågan #${saved.id} för ${saved.company} sparades i databasen.`;
+        formStatus.textContent = `Tack ${payload.name}! Vi hör av oss inom en arbetsdag.`;
         formStatus.classList.add("success");
         contactForm.reset();
       } catch {
-        formStatus.textContent = "Kunde inte skicka förfrågan. Kontrollera e-postadressen och försök igen.";
+        formStatus.textContent = "Förfrågan kunde inte skickas just nu. Försök igen om en stund, eller mejla oss på hej@nordicagent.se.";
         formStatus.classList.add("error");
       }
     });

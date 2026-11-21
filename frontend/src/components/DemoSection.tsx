@@ -1,5 +1,5 @@
 import { FormEvent, useEffect, useState } from "react";
-import { DemoSlot, fetchDemoSlots, simulateDemoBooking } from "../api/client";
+import { askDemoAssistant, DemoSlot, fetchDemoSlots, simulateDemoBooking } from "../api/client";
 
 type IndustryKey = "tandlakare" | "frisor" | "massage" | "bilverkstad";
 type DayKey = "idag" | "imorgon";
@@ -121,7 +121,7 @@ export function DemoSection() {
   const [messages, setMessages] = useState<ChatMsg[]>([
     {
       role: "bot",
-      text: "Hej! Jag är en interaktiv demo av AI-agenten som NordicAgent Studio bygger åt företag. Testa att klicka på en tid eller ställ en fråga!"
+      text: "Hej! Berätta gärna vad ditt företag gör eller vilken idé du har, så föreslår jag hur en AI-agent kan hjälpa er."
     }
   ]);
 
@@ -156,14 +156,17 @@ export function DemoSection() {
     }
   }
 
-  function sendChat(text: string) {
+  async function sendChat(text: string) {
     const trimmed = text.trim();
     if (!trimmed) return;
-    setMessages((prev) => [
-      ...prev,
-      { role: "user", text: trimmed },
-      { role: "bot", text: buildDemoReply(trimmed, slots) }
-    ]);
+    setMessages((prev) => [...prev, { role: "user", text: trimmed }]);
+
+    try {
+      const res = await askDemoAssistant(trimmed);
+      setMessages((prev) => [...prev, { role: "bot", text: res.reply }]);
+    } catch {
+      setMessages((prev) => [...prev, { role: "bot", text: buildDemoReply(trimmed, slots) }]);
+    }
   }
 
   function handleChatSubmit(e: FormEvent) {
@@ -176,9 +179,9 @@ export function DemoSection() {
     <section className="section" id="demo">
       <div className="container">
         <div className="section-header">
-          <h2>Prova kalendern och chatten</h2>
+          <h2>Prova kalendern &amp; dela din idé med AI-assistenten</h2>
           <p>
-            Så här kan en kund se lediga tider och få svar direkt. Tider och priser nedan är exempel.{" "}
+            Testa exempelkalendern eller berätta om din verksamhet och idé direkt i AI-assistenten.{" "}
             {import.meta.env.DEV && (
               <span className="api-pill">{apiMode === "live" ? "Dev: live-API" : "Dev: lokal demo-data"}</span>
             )}
@@ -270,8 +273,8 @@ export function DemoSection() {
           </div>
 
           <div className="card chat-box">
-            <h3>Förhandsgranskning: AI-kundchatt</h3>
-            <p>Klicka på en snabbfråga eller skriv en egen testfråga:</p>
+            <h3>Dela din idé live &amp; fråga AI-assistenten</h3>
+            <p>Berätta kort om ditt företag eller din idé, så ger AI-assistenten förslag direkt:</p>
 
             <div className="chat-log" aria-live="polite">
               {messages.map((m, idx) => (
@@ -282,14 +285,26 @@ export function DemoSection() {
             </div>
 
             <div className="chat-prompts">
-              <button type="button" className="prompt-chip" onClick={() => sendChat("Sista minuten idag?")}>
-                Sista minuten idag?
+              <button
+                type="button"
+                className="prompt-chip"
+                onClick={() => sendChat("Vi driver en tandklinik och vill fylla sena avbokningar")}
+              >
+                Tandklinik &amp; återbud
               </button>
-              <button type="button" className="prompt-chip" onClick={() => sendChat("Hur bokar en kund?")}>
-                Hur bokar en kund?
+              <button
+                type="button"
+                className="prompt-chip"
+                onClick={() => sendChat("Jag har en frisörsalong och hinner inte svara i telefon")}
+              >
+                Frisörsalong
               </button>
-              <button type="button" className="prompt-chip" onClick={() => sendChat("Hur hanteras GDPR?")}>
-                GDPR &amp; Säkerhet?
+              <button
+                type="button"
+                className="prompt-chip"
+                onClick={() => sendChat("Hur funkar sista minuten med -50 %?")}
+              >
+                Sista minuten?
               </button>
             </div>
 
@@ -298,9 +313,9 @@ export function DemoSection() {
                 type="text"
                 value={chatInput}
                 onChange={(e) => setChatInput(e.target.value)}
-                placeholder="Skriv en testfråga, t.ex. pris, tid eller GDPR"
-                aria-label="Skriv en testfråga till AI-demon"
-                maxLength={160}
+                placeholder="Dela din idé eller ställ en fråga..."
+                aria-label="Dela din idé eller ställ en fråga till AI-assistenten"
+                maxLength={240}
               />
               <button className="btn btn-primary btn-sm" type="submit">
                 Skicka

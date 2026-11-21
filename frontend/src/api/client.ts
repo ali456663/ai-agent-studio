@@ -47,6 +47,16 @@ export async function simulateDemoBooking(
   return (await res.json()) as { status: string; message: string };
 }
 
+export async function askDemoAssistant(message: string): Promise<{ reply: string }> {
+  const res = await fetch(`${API_BASE}/api/demo/assistant`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ message })
+  });
+  if (!res.ok) throw new Error(`HTTP ${res.status}`);
+  return (await res.json()) as { reply: string };
+}
+
 export async function submitLead(payload: LeadPayload): Promise<LeadResponse> {
   const res = await fetch(`${API_BASE}/api/leads`, {
     method: "POST",

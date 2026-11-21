@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>NordicAgent Studio – Vi bygger säkra AI-agenter för ert företag</title>
+  <title>NordicAgent Studio – Fyll tomma tider och svara kunderna dygnet runt</title>
   <link rel="icon" type="image/svg+xml" href="/favicon.svg">
   <link rel="stylesheet" href="/styles.css">
 </head>
@@ -18,8 +18,8 @@
         <ul class="nav-links">
           <li><a href="#tjanster">Tjänster</a></li>
           <li><a href="#branscher">Branscher</a></li>
-          <li><a href="#demo">Live-demo</a></li>
-          <li><a href="#om-oss">Vårt team</a></li>
+          <li><a href="#demo">Prova demo</a></li>
+          <li><a href="#kom-igang">Så kommer ni igång</a></li>
           <li><a href="#priser">Paket</a></li>
           <li><a class="btn btn-primary btn-sm" href="#kontakt">Boka demo</a></li>
         </ul>
@@ -31,57 +31,74 @@
     <section class="hero">
       <div class="container hero-grid">
         <div>
-          <span class="badge">AI-agentstudio · Spring Boot (8087) + React/3D</span>
-          <h1>Vi bygger skräddarsydda AI-agenter som avlastar ert företag – idag och i framtiden</h1>
+          <h1>Fyll tomma tider och svara kunderna dygnet runt</h1>
           <p class="lead">
-            Vårt team designar, bygger och driftsätter säkra AI-agenter för bokningar, mailsvar, kundchatt och
-            sista minuten-erbjudanden. Byggt med Spring Boot, Spring Security, PostgreSQL, React, TypeScript och 3D WebGL.
+            Vi bygger skräddarsydda AI-agenter för bokningar, mailsvar, kundchatt och sista minuten-erbjudanden –
+            anpassade efter era tider, priser och rutiner.
           </p>
           <div class="hero-actions">
             <a class="btn btn-primary" href="#kontakt">Boka kostnadsfri rådgivning</a>
-            <a class="btn btn-secondary" href="#demo">Testa interaktiv live-demo</a>
+            <a class="btn btn-secondary" href="#demo">Prova kalendern &amp; AI-assistenten</a>
           </div>
           <div class="trust-row">
-            <span>✓ Publik startsida (ingen inloggning)</span>
-            <span>✓ Live REST API på port 8087</span>
-            <span>✓ GDPR &amp; Spring Security</span>
+            <span>✓ Svar dygnet runt</span>
+            <span>✓ Anpassat efter er kalender</span>
+            <span>✓ Dataminimering enligt GDPR</span>
           </div>
         </div>
 
-        <aside class="hero-3d-frame" aria-label="Interaktiv 3D AI-visualisering">
-          <canvas id="heroCanvas" class="hero-3d-canvas"></canvas>
-          <div class="hero-3d-caption">
-            <span>🟢 Spring Boot API: Aktivt (8087)</span>
-            <span>3D Canvas · React/Three.js i /frontend</span>
+        <div class="hero-visual">
+          <div class="hero-3d-bg" aria-hidden="true">
+            <canvas id="heroCanvas" class="hero-3d-canvas"></canvas>
           </div>
-        </aside>
+          <div class="mock" aria-label="Exempel på kalender och AI-chatt">
+            <div class="mock-head">
+              <strong>Dagens schema (exempel)</strong>
+              <span>Tandkliniken Centrum</span>
+            </div>
+            <ul class="mock-slots">
+              <li class="mock-slot slot-busy">
+                <span class="slot-time">09:00</span>
+                <span>Upptagen · Undersökning</span>
+              </li>
+              <li class="mock-slot slot-free">
+                <span class="slot-time">10:30</span>
+                <span>Ledig · Basundersökning (990 kr)</span>
+              </li>
+              <li class="mock-slot slot-deal">
+                <span class="slot-time">13:00</span>
+                <span>Sista minuten (-50 %) · Tandhygienist (495 kr)</span>
+              </li>
+            </ul>
+            <div class="mock-chat">
+              <p class="chat-msg chat-user">Hej, har ni någon ledig tid i eftermiddag?</p>
+              <p class="chat-msg chat-bot">Ja! Kl. 13:00 fick vi precis ett återbud med 50 % rabatt (495 kr). Vill du att jag bokar in dig?</p>
+            </div>
+          </div>
+        </div>
       </div>
     </section>
 
     <section class="section section-alt" id="tjanster">
       <div class="container">
         <div class="section-header">
-          <h2>Vad vårt team bygger åt ert företag</h2>
-          <p>Skräddarsydda AI-agenter som underlättar dagens vardag och framtidens lösningar.</p>
+          <h2>Vad vi bygger åt ert företag</h2>
+          <p>Skräddarsydda AI-agenter som underlättar dagens vardag och framtidens kundflöden.</p>
         </div>
         <div class="grid-4">
           <article class="card">
-            <div class="card-icon">🗓️</div>
             <h3>Automatisk bokning</h3>
-            <p>Visar lediga och upptagna tider i realtid direkt kopplat till kalender och databas.</p>
+            <p>Visar lediga och upptagna tider i realtid och kopplas mot ert bokningsflöde.</p>
           </article>
           <article class="card">
-            <div class="card-icon">✉️</div>
             <h3>AI-mailsvar 24/7</h3>
-            <p>Svarar snabbt på kundmail dygnet runt och skickar bara komplexa ärenden vidare.</p>
+            <p>Svarar på vanliga kundmail dygnet runt och skickar bara mer komplicerade ärenden vidare.</p>
           </article>
           <article class="card">
-            <div class="card-icon">💬</div>
             <h3>Kundchatt</h3>
             <p>Hjälper besökare på hemsidan med priser, öppettider och direktbokning.</p>
           </article>
           <article class="card">
-            <div class="card-icon">⚡</div>
             <h3>Sista minuten (-50 %)</h3>
             <p>Omvandlar sena återbud och tomma luckor till rabatterade tider automatiskt.</p>
           </article>
@@ -99,7 +116,7 @@
           <article class="card card-featured">
             <span class="pill-tag">Huvudfokus</span>
             <h3>Tandläkare &amp; Vård</h3>
-            <p>Avlasta receptionen med bokningar, återbud och GDPR-trygga flöden.</p>
+            <p>Avlasta receptionen med tydliga bokningar, återbud och GDPR-medvetna flöden.</p>
           </article>
           <article class="card">
             <span class="pill-tag">Skönhet</span>
@@ -123,21 +140,21 @@
     <section class="section section-alt" id="demo">
       <div class="container">
         <div class="section-header">
-          <h2>Live-demo kopplad mot Spring Boot API (8087)</h2>
-          <p>Klicka på en grön ledig tid eller gul sista minuten-tid (-50 %) för att testa backend-API:et i realtid!</p>
+          <h2>Prova kalendern &amp; dela din idé med AI-assistenten</h2>
+          <p>Testa exempelkalendern till vänster, eller berätta om din verksamhet och idé direkt i AI-assistenten till höger.</p>
         </div>
         <div class="demo-shell">
           <div class="card">
             <div class="demo-controls">
-              <div class="tab-group">
-                <button class="tab-btn active" type="button" data-industry="tandlakare">Tandläkare</button>
-                <button class="tab-btn" type="button" data-industry="frisor">Frisör</button>
-                <button class="tab-btn" type="button" data-industry="massage">Massage</button>
-                <button class="tab-btn" type="button" data-industry="bilverkstad">Bilverkstad</button>
+              <div class="tab-group" role="group" aria-label="Välj bransch">
+                <button class="tab-btn active" type="button" aria-pressed="true" data-industry="tandlakare">Tandläkare</button>
+                <button class="tab-btn" type="button" aria-pressed="false" data-industry="frisor">Frisör</button>
+                <button class="tab-btn" type="button" aria-pressed="false" data-industry="massage">Massage</button>
+                <button class="tab-btn" type="button" aria-pressed="false" data-industry="bilverkstad">Bilverkstad</button>
               </div>
-              <div class="tab-group">
-                <button class="tab-btn active" type="button" data-day="idag">Idag</button>
-                <button class="tab-btn" type="button" data-day="imorgon">Imorgon</button>
+              <div class="tab-group" role="group" aria-label="Välj dag">
+                <button class="tab-btn active" type="button" aria-pressed="true" data-day="idag">Idag</button>
+                <button class="tab-btn" type="button" aria-pressed="false" data-day="imorgon">Imorgon</button>
               </div>
             </div>
             <div class="legend">
@@ -150,45 +167,49 @@
           </div>
 
           <div class="card chat-box">
-            <h3>AI-kundchatt (Demo)</h3>
-            <div class="chat-log" id="chatLog">
-              <div class="chat-msg chat-bot">Hej! Fråga mig om sista minuten, bokning, priser eller GDPR &amp; Spring Security.</div>
+            <h3>Dela din idé live &amp; fråga AI-assistenten</h3>
+            <p>Berätta kort om ditt företag eller din idé, så ger AI-assistenten förslag direkt:</p>
+            <div class="chat-log" id="chatLog" aria-live="polite">
+              <div class="chat-msg chat-bot">Hej! Berätta gärna vad ditt företag gör eller vad du vill automatisera, så föreslår jag hur en AI-agent kan hjälpa er.</div>
+            </div>
+            <div class="chat-prompts">
+              <button class="prompt-chip" type="button" data-idea="Vi driver en tandklinik och vill fylla sena avbokningar">Tandklinik &amp; återbud</button>
+              <button class="prompt-chip" type="button" data-idea="Jag har en frisörsalong och hinner inte svara i telefon">Frisörsalong</button>
+              <button class="prompt-chip" type="button" data-idea="Vi vill ha kundchatt och bokning på vår hemsida">Chatt &amp; bokning</button>
             </div>
             <form class="chat-form" id="chatForm">
-              <input id="chatInput" type="text" placeholder="Skriv en testfråga..." maxlength="160">
+              <input id="chatInput" type="text" placeholder="Dela din idé eller ställ en fråga..." aria-label="Dela din idé eller ställ en fråga till AI-assistenten" maxlength="240">
               <button class="btn btn-primary btn-sm" type="submit">Skicka</button>
             </form>
+            <button class="btn btn-secondary btn-sm" id="sendIdeaToForm" type="button">Ta med min idé till rådgivning ↓</button>
           </div>
         </div>
       </div>
     </section>
 
-    <section class="section" id="om-oss">
+    <section class="section" id="kom-igang">
       <div class="container">
         <div class="section-header">
-          <h2>Teamet bakom era AI-agenter</h2>
-          <p>UI/UX, 3D WebGL, Java/Spring Boot och IT-säkerhet i ett och samma team.</p>
+          <h2>Så kommer ni igång</h2>
+          <p>Tre enkla steg från första samtal till färdig AI-agent i er vardag.</p>
         </div>
-        <div class="grid-3">
-          <article class="card">
-            <div class="team-avatar">BE</div>
-            <h3>Backend &amp; Databas</h3>
-            <div class="team-role">Java · Spring Boot · PostgreSQL</div>
-            <p>Säkra REST-API:er, kalenderintegrationer och databaslagring med Spring Security.</p>
-          </article>
-          <article class="card">
-            <div class="team-avatar">FE</div>
-            <h3>UI/UX, Frontend &amp; 3D</h3>
-            <div class="team-role">React · TypeScript · Three.js · Blender · Spline</div>
-            <p>Moderna, snabba gränssnitt och interaktiva 3D-upplevelser.</p>
-          </article>
-          <article class="card">
-            <div class="team-avatar">SEC</div>
-            <h3>Säkerhet &amp; DevOps</h3>
-            <div class="team-role">GDPR · NIS2 · Docker · GitHub Actions · Vercel</div>
-            <p>Härdade miljöer, MFA, loggning och incidentberedskap från dag ett.</p>
-          </article>
-        </div>
+        <ol class="grid-3 steps">
+          <li class="card">
+            <span class="step-num">1</span>
+            <h3>Kartläggning &amp; kalenderkoppling</h3>
+            <p>Vi går igenom era vanligaste kundfrågor, era GDPR-rutiner och kopplar in er kalender.</p>
+          </li>
+          <li class="card">
+            <span class="step-num">2</span>
+            <h3>Anpassning &amp; test</h3>
+            <p>Vi tränar AI-agenten på era tjänster, priser och sista minuten-regler och testar tillsammans.</p>
+          </li>
+          <li class="card">
+            <span class="step-num">3</span>
+            <h3>Lansering &amp; löpande justering</h3>
+            <p>Agenten går live på er hemsida och vi finjusterar svaren utifrån verkliga kundfrågor.</p>
+          </li>
+        </ol>
       </div>
     </section>
 
@@ -196,6 +217,7 @@
       <div class="container">
         <div class="section-header">
           <h2>Paket &amp; upplägg</h2>
+          <p>Priserna nedan är exempel och anpassas efter er omfattning.</p>
         </div>
         <div class="grid-3">
           <article class="card">
@@ -204,7 +226,7 @@
             <ul class="check-list">
               <li>AI-kundchatt 24/7</li>
               <li>Svar på priser &amp; frågor</li>
-              <li>GDPR-anpassad setup</li>
+              <li>Anpassad efter era GDPR-krav</li>
             </ul>
             <a class="btn btn-secondary" href="#kontakt">Välj Start</a>
           </article>
@@ -213,7 +235,7 @@
             <h3>Pro</h3>
             <div class="price-amount">Från 5 900 kr/mån</div>
             <ul class="check-list">
-              <li>Live kalender-API &amp; bokning</li>
+              <li>Direkt kalenderkoppling &amp; bokning</li>
               <li>Automatiska AI-mailsvar</li>
               <li>Sista minuten (-50 %)</li>
             </ul>
@@ -223,9 +245,9 @@
             <h3>Företag</h3>
             <div class="price-amount">Offert</div>
             <ul class="check-list">
-              <li>Skräddarsydd Spring Boot &amp; AI</li>
-              <li>NIS2-dokumentation &amp; loggning</li>
-              <li>Dedikerat team</li>
+              <li>Anpassade integrationer mot era system</li>
+              <li>Flera kalendrar eller kliniker</li>
+              <li>Löpande utveckling</li>
             </ul>
             <a class="btn btn-secondary" href="#kontakt">Kontakta oss</a>
           </article>
@@ -236,12 +258,16 @@
     <section class="section" id="kontakt">
       <div class="container contact-grid">
         <div>
-          <span class="badge">Live mot databas (POST /api/leads)</span>
-          <h2>Boka demo med vårt team</h2>
-          <p>Skicka en förfrågan så sparas den direkt via Spring Boot API på port 8087!</p>
+          <h2>Boka demo med oss</h2>
+          <p>Berätta vad ni vill underlätta i er verksamhet så visar vi ett förslag anpassat efter er.</p>
+          <ul class="check-list">
+            <li>Kostnadsfri genomgång utan förpliktelser</li>
+            <li>Dataminimerat formulär enligt GDPR</li>
+            <li>Svar normalt inom en arbetsdag</li>
+          </ul>
           <p>
             <strong>Kontakt:</strong> <a href="mailto:hej@nordicagent.se">hej@nordicagent.se</a><br>
-            <strong>Säkerhetsincidenter:</strong> <a href="mailto:security@nordicagent.se">security@nordicagent.se</a>
+            <strong>Säkerhet:</strong> <a href="mailto:security@nordicagent.se">security@nordicagent.se</a>
           </p>
         </div>
 
@@ -249,15 +275,15 @@
           <form id="contactForm" novalidate>
             <div class="form-group">
               <label for="name">Namn *</label>
-              <input id="name" type="text" required placeholder="Anna Andersson">
+              <input id="name" type="text" autocomplete="name" required placeholder="Anna Andersson">
             </div>
             <div class="form-group">
               <label for="email">E-post *</label>
-              <input id="email" type="email" required placeholder="anna@kliniken.se">
+              <input id="email" type="email" autocomplete="email" required placeholder="anna@kliniken.se">
             </div>
             <div class="form-group">
               <label for="company">Företag *</label>
-              <input id="company" type="text" required placeholder="Tandkliniken Centrum">
+              <input id="company" type="text" autocomplete="organization" required placeholder="Tandkliniken Centrum">
             </div>
             <div class="form-group">
               <label for="industry">Bransch</label>
@@ -270,12 +296,16 @@
               </select>
             </div>
             <div class="form-group">
-              <label for="message">Meddelande (valfritt)</label>
-              <textarea id="message" rows="3" placeholder="T.ex. bokning, mailsvar, kundchatt..."></textarea>
+              <label for="message">Din idé / vad ni vill automatisera (valfritt)</label>
+              <textarea id="message" rows="3" placeholder="T.ex. bokning, mailsvar, kundchatt eller sista minuten-tider"></textarea>
+            </div>
+            <div class="hp-field" aria-hidden="true">
+              <label for="website">Lämna tomt</label>
+              <input id="website" type="text" tabindex="-1" autocomplete="off">
             </div>
             <label class="checkbox-row">
               <input id="gdprConsent" type="checkbox" required>
-              <span>Jag godkänner att mina uppgifter behandlas enligt GDPR-integritetspolicyn. *</span>
+              <span>Jag godkänner att mina uppgifter behandlas enligt integritetspolicyn (GDPR). *</span>
             </label>
             <button class="btn btn-primary" type="submit">Skicka förfrågan</button>
             <div class="form-status" id="formStatus" role="status"></div>
@@ -288,7 +318,7 @@
   <footer class="site-footer">
     <div class="container footer-bottom">
       <span>© <span id="year"></span> NordicAgent Studio</span>
-      <span>Publik startsida · Admin-API skyddat med Spring Security (/api/admin/leads)</span>
+      <span>Inga spårningscookies · <a href="mailto:security@nordicagent.se">security@nordicagent.se</a></span>
     </div>
   </footer>
 
