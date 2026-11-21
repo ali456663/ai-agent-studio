@@ -1,0 +1,68 @@
+name: CI – Fullstack Build & Säkerhetskontroll
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+permissions:
+  contents: read
+
+jobs:
+  backend-ci:
+    name: Backend (Java 21 · Spring Boot · Maven)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: backend
+
+    steps:
+      - name: Hämta källkod
+        uses: actions/checkout@v4
+
+      - name: Konfigurera Java 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "21"
+          cache: maven
+
+      - name: Kompilera och paketera Spring Boot
+        run: mvn -B package -DskipTests
+
+  frontend-ci:
+    name: Frontend (React · TypeScript · Three.js · Vite)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: frontend
+
+    steps:
+      - name: Hämta källkod
+        uses: actions/checkout@v4
+
+      - name: Konfigurera Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Installera beroenden & bygg TypeScript/Vite
+        run: |
+          npm install
+          npm run build
+
+  security-checks:
+    name: Säkerhetskontroll (hemligheter & config)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Hämta källkod
+        uses: actions/checkout@v4
+
+      - name: Kontrollera att inga API-nycklar finns i källkoden
+        run: |
+          if grep -rnE "(sk-[A-Za-z0-9]{20,}|AKIA[0-9A-Z]{16}|ghp_[A-Za-z0-9]{36}|AIza[0-9A-Za-z_-]{35})" backend/src frontend/src; then
+            echo "VARNING: Möjlig API-nyckel hittades!"
+            exit 1
+          fi
+          echo "Inga API-nycklar hittades."

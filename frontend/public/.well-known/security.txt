@@ -1,0 +1,4 @@
+Contact: mailto:security@nordicagent.se
+Preferred-Languages: sv, en
+Expires: 2027-11-21T23:59:59.000Z
+Canonical: https://nordicagent.se/.well-known/security.txt

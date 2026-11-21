@@ -1,0 +1,24 @@
+# IntelliJ IDEA
+.idea/
+*.iml
+out/
+
+# Backend (Java / Maven)
+backend/target/
+*.jar
+*.war
+
+# Frontend (Node / Vite / TypeScript)
+frontend/node_modules/
+frontend/dist/
+
+# Miljövariabler & hemligheter (ALDRIG i Git!)
+.env
+.env.*
+!.env.example
+
+# Vercel & OS
+.vercel/
+.DS_Store
+Thumbs.db
+*.log
