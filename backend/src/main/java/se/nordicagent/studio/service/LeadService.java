@@ -26,6 +26,8 @@ public class LeadService {
         lead.setIndustry(req.industry().trim());
         lead.setMessage(req.message() == null ? "" : req.message().trim());
         lead.setGdprConsent(req.gdprConsent());
+        lead.setConsentVersion(req.consentVersion().trim());
+        lead.setConsentAt(req.consentAt());
 
         Lead saved = leadRepository.save(lead);
         return new LeadResponse(saved.getId(), saved.getCompany(), "RECEIVED", saved.getCreatedAt());

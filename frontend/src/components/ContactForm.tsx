@@ -1,6 +1,10 @@
 import { FormEvent, useState } from "react";
 import { submitLead } from "../api/client";
 
+// Uppdatera versionen varje gång integritetspolicyn ändras, så att samtycket kan kopplas till rätt text.
+const CONSENT_VERSION = "2026-11-21";
+const CONTACT_EMAIL = "hej@nordicagent.se"; // TODO: byt till er riktiga adress
+
 interface ContactFormProps {
   onOpenPrivacy: () => void;
 }
@@ -12,6 +16,7 @@ export function ContactForm({ onOpenPrivacy }: ContactFormProps) {
   const [industry, setIndustry] = useState("Tandläkare / Vård");
   const [message, setMessage] = useState("");
   const [gdprConsent, setGdprConsent] = useState(false);
+  const [website, setWebsite] = useState(""); // honeypot: riktiga användare lämnar det tomt
   const [status, setStatus] = useState<{ type: "idle" | "success" | "error"; text: string }>({
     type: "idle",
     text: ""
@@ -29,33 +34,41 @@ export function ContactForm({ onOpenPrivacy }: ContactFormProps) {
       return;
     }
     if (!gdprConsent) {
-      setStatus({ type: "error", text: "Du behöver godkänna integritetspolicyn (GDPR) innan du skickar." });
+      setStatus({ type: "error", text: "Du behöver godkänna integritetspolicyn innan du skickar." });
+      return;
+    }
+
+    const thanks = `Tack ${name.trim()}! Vi hör av oss inom en arbetsdag.`;
+
+    // Boten fyllde i det dolda fältet: låtsas lyckas, skicka ingenting.
+    if (website.trim()) {
+      setStatus({ type: "success", text: thanks });
       return;
     }
 
     setSubmitting(true);
     try {
-      const saved = await submitLead({
+      await submitLead({
         name: name.trim(),
         email: email.trim(),
         company: company.trim(),
         industry,
         message: message.trim(),
-        gdprConsent
+        gdprConsent,
+        consentVersion: CONSENT_VERSION,
+        consentAt: new Date().toISOString()
       });
-      setStatus({
-        type: "success",
-        text: `Tack ${name}! Förfrågan #${saved.id} för ${saved.company} sparades säkert i PostgreSQL via Spring Boot API (port 8087).`
-      });
+      setStatus({ type: "success", text: thanks });
       setName("");
       setEmail("");
       setCompany("");
       setMessage("");
       setGdprConsent(false);
     } catch {
+      // Behåll det användaren skrivit och säg som det är: inget skickades.
       setStatus({
-        type: "success",
-        text: `Tack ${name}! Formuläret är validerat (frontend demo-läge). Starta Spring Boot + PostgreSQL på port 8087 för att spara i databasen.`
+        type: "error",
+        text: `Förfrågan kunde inte skickas just nu. Försök igen om en stund, eller mejla oss på ${CONTACT_EMAIL}.`
       });
     } finally {
       setSubmitting(false);
@@ -69,6 +82,7 @@ export function ContactForm({ onOpenPrivacy }: ContactFormProps) {
         <input
           id="name"
           type="text"
+          autoComplete="name"
           value={name}
           onChange={(e) => setName(e.target.value)}
           placeholder="Anna Andersson"
@@ -81,6 +95,7 @@ export function ContactForm({ onOpenPrivacy }: ContactFormProps) {
         <input
           id="email"
           type="email"
+          autoComplete="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           placeholder="anna@kliniken.se"
@@ -93,6 +108,7 @@ export function ContactForm({ onOpenPrivacy }: ContactFormProps) {
         <input
           id="company"
           type="text"
+          autoComplete="organization"
           value={company}
           onChange={(e) => setCompany(e.target.value)}
           placeholder="T.ex. Tandkliniken Centrum"
@@ -118,7 +134,20 @@ export function ContactForm({ onOpenPrivacy }: ContactFormProps) {
           rows={3}
           value={message}
           onChange={(e) => setMessage(e.target.value)}
-          placeholder="T.ex. bokning, mailsvar, kundchatt eller sista minuten-tider..."
+          placeholder="T.ex. bokning, mailsvar, kundchatt eller sista minuten-tider"
+        />
+      </div>
+
+      {/* Honeypot: dolt för människor och skärmläsare */}
+      <div className="hp-field" aria-hidden="true">
+        <label htmlFor="website">Lämna tomt</label>
+        <input
+          id="website"
+          type="text"
+          tabIndex={-1}
+          autoComplete="off"
+          value={website}
+          onChange={(e) => setWebsite(e.target.value)}
         />
       </div>
 
@@ -132,7 +161,7 @@ export function ContactForm({ onOpenPrivacy }: ContactFormProps) {
         <span>
           Jag godkänner att mina uppgifter behandlas enligt{" "}
           <button type="button" className="inline-link" onClick={onOpenPrivacy}>
-            integritetspolicyn (GDPR)
+            integritetspolicyn
           </button>
           . *
         </span>
@@ -143,7 +172,7 @@ export function ContactForm({ onOpenPrivacy }: ContactFormProps) {
       </button>
 
       {status.type !== "idle" && (
-        <div className={`form-status ${status.type}`} role="status">
+        <div className={`form-status ${status.type}`} role={status.type === "error" ? "alert" : "status"}>
           {status.text}
         </div>
       )}

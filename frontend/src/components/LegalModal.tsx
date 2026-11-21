@@ -1,16 +1,60 @@
+import { useEffect, useId, useRef } from "react";
+
 interface LegalModalProps {
   mode: "privacy" | "security" | null;
   onClose: () => void;
 }
 
 export function LegalModal({ mode, onClose }: LegalModalProps) {
+  const titleId = useId();
+  const cardRef = useRef<HTMLDivElement | null>(null);
+  const previousFocusRef = useRef<HTMLElement | null>(null);
+
+  useEffect(() => {
+    if (!mode) return;
+    previousFocusRef.current = document.activeElement as HTMLElement | null;
+
+    const card = cardRef.current;
+    const focusables = card?.querySelectorAll<HTMLElement>(
+      'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+    );
+    focusables?.[0]?.focus();
+
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        e.preventDefault();
+        onClose();
+        return;
+      }
+      if (e.key === "Tab" && focusables && focusables.length > 0) {
+        const first = focusables[0];
+        const last = focusables[focusables.length - 1];
+        if (e.shiftKey && document.activeElement === first) {
+          e.preventDefault();
+          last.focus();
+        } else if (!e.shiftKey && document.activeElement === last) {
+          e.preventDefault();
+          first.focus();
+        }
+      }
+    };
+
+    document.addEventListener("keydown", onKeyDown);
+    return () => {
+      document.removeEventListener("keydown", onKeyDown);
+      previousFocusRef.current?.focus();
+    };
+  }, [mode, onClose]);
+
   if (!mode) return null;
 
   return (
-    <div className="modal-backdrop" role="dialog" aria-modal="true" onClick={onClose}>
-      <div className="modal-card" onClick={(e) => e.stopPropagation()}>
+    <div className="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby={titleId} onClick={onClose}>
+      <div className="modal-card" ref={cardRef} onClick={(e) => e.stopPropagation()}>
         <div className="modal-header">
-          <h2>{mode === "privacy" ? "Integritetspolicy & Cookies (GDPR)" : "Säkerhet, Spring Security & Incidenthantering"}</h2>
+          <h2 id={titleId}>
+            {mode === "privacy" ? "Integritetspolicy & Cookies (GDPR)" : "Säkerhet & Incidentrapportering"}
+          </h2>
           <button type="button" className="btn btn-secondary btn-sm" onClick={onClose}>
             Stäng
           </button>
@@ -19,26 +63,36 @@ export function LegalModal({ mode, onClose }: LegalModalProps) {
         {mode === "privacy" ? (
           <div className="modal-body">
             <p>
-              NordicAgent Studio följer principen om <strong>dataminimering</strong>. Kontaktformuläret samlar endast in
-              namn, e-post, företag, bransch och valfritt meddelande med stöd av ditt samtycke (GDPR art. 6.1 a).
+              NordicAgent Studio samlar endast in de uppgifter du själv lämnar i kontaktformuläret (namn, e-post,
+              företag, bransch, valfritt meddelande samt tidpunkt och version för ditt samtycke) för att besvara din
+              förfrågan enligt GDPR art. 6.1 a.
             </p>
             <ul>
-              <li>Uppgifter sparas krypterat i PostgreSQL och raderas när dialogen inte längre är aktiv (senast efter 12 månader).</li>
-              <li>Inga reklam- eller tredjepartscookies används – endast lokal lagring för att komma ihåg ditt cookie-val.</li>
-              <li>Begär utdrag eller radering via <a href="mailto:hej@nordicagent.se">hej@nordicagent.se</a>.</li>
+              {/* TODO: justera lagringstid om ni har annan rutin */}
+              <li>Uppgifter sparas högst 12 månader utan aktiv dialog och raderas därefter.</li>
+              <li>Vi använder inga reklam- eller tredjepartscookies – endast lokal lagring för ditt cookie-val.</li>
+              <li>
+                Du kan när som helst begära utdrag eller radering via{" "}
+                {/* TODO: byt till er riktiga adress */}
+                <a href="mailto:hej@nordicagent.se">hej@nordicagent.se</a>.
+              </li>
             </ul>
           </div>
         ) : (
           <div className="modal-body">
             <p>
-              Plattformen följer arbetsflödet <strong>Identifiera → Bedöma → Åtgärda → Verifiera</strong> enligt vår
-              säkerhetsblueprint för SME och NIS2-leverantörskedjor:
+              Vi arbetar löpande med dataminimering, krypterad webbtrafik (HTTPS) och rollstyrd åtkomst för
+              administrativa funktioner.
             </p>
             <ul>
-              <li><strong>Spring Security:</strong> Stateless API, CORS-begränsning, BCrypt, Least Privilege för <code>/api/admin/**</code>.</li>
-              <li><strong>HTTPS &amp; Headers:</strong> CSP, HSTS, X-Frame-Options: DENY, Referrer-Policy och inga hemligheter i koden.</li>
-              <li><strong>Backup &amp; Drift:</strong> Daglig PostgreSQL-backup med immutable kopia och löpande patchning (&lt; 90 dagar).</li>
-              <li><strong>Incidentrapportering:</strong> <a href="mailto:security@nordicagent.se">security@nordicagent.se</a> och <a href="/.well-known/security.txt">/.well-known/security.txt</a>.</li>
+              <li>
+                Rapportera misstänkta sårbarheter eller incidenter till{" "}
+                {/* TODO: verifiera att adress och security.txt finns i produktion */}
+                <a href="mailto:security@nordicagent.se">security@nordicagent.se</a>.
+              </li>
+              <li>
+                Maskinläsbar kontaktväg: <a href="/.well-known/security.txt">/.well-known/security.txt</a>.
+              </li>
             </ul>
           </div>
         )}

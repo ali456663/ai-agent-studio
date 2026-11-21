@@ -29,7 +29,6 @@ export function Hero3DCanvas({ blenderModelUrl, splineUrl }: Hero3DCanvasProps) 
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     container.appendChild(renderer.domElement);
 
-    // Belysning
     const ambient = new THREE.AmbientLight(0xffffff, 0.85);
     scene.add(ambient);
 
@@ -44,7 +43,6 @@ export function Hero3DCanvas({ blenderModelUrl, splineUrl }: Hero3DCanvasProps) 
     const rootGroup = new THREE.Group();
     scene.add(rootGroup);
 
-    // Standard WebGL / Three.js 3D AI-kärna + omloppsring + partiklar
     const coreGeo = new THREE.IcosahedronGeometry(1.35, 2);
     const coreMat = new THREE.MeshStandardMaterial({
       color: 0x0f4c81,
@@ -73,7 +71,6 @@ export function Hero3DCanvas({ blenderModelUrl, splineUrl }: Hero3DCanvasProps) 
     const ringMesh = new THREE.Mesh(ringGeo, ringMat);
     ringMesh.rotation.x = Math.PI / 3;
 
-    // Partikelnät (AI-noder)
     const particleCount = 140;
     const positions = new Float32Array(particleCount * 3);
     for (let i = 0; i < particleCount; i++) {
@@ -96,7 +93,6 @@ export function Hero3DCanvas({ blenderModelUrl, splineUrl }: Hero3DCanvasProps) 
 
     rootGroup.add(coreMesh, wireMesh, ringMesh, particles);
 
-    // Om en Blender .glb-fil anges laddas den istället för standardkärnan
     if (blenderModelUrl) {
       const loader = new GLTFLoader();
       loader.load(
@@ -132,9 +128,16 @@ export function Hero3DCanvas({ blenderModelUrl, splineUrl }: Hero3DCanvasProps) 
     };
     window.addEventListener("resize", onResize);
 
+    let visible = true;
+    const io = new IntersectionObserver(([entry]) => {
+      visible = entry.isIntersecting;
+    });
+    io.observe(container);
+
     let frameId = 0;
     const animate = () => {
       frameId = requestAnimationFrame(animate);
+      if (!visible) return;
       coreMesh.rotation.y += 0.004;
       wireMesh.rotation.y -= 0.003;
       ringMesh.rotation.z += 0.006;
@@ -148,6 +151,7 @@ export function Hero3DCanvas({ blenderModelUrl, splineUrl }: Hero3DCanvasProps) 
 
     return () => {
       cancelAnimationFrame(frameId);
+      io.disconnect();
       container.removeEventListener("pointermove", onPointerMove);
       window.removeEventListener("resize", onResize);
       renderer.dispose();
@@ -179,12 +183,10 @@ export function Hero3DCanvas({ blenderModelUrl, splineUrl }: Hero3DCanvasProps) 
   }
 
   return (
-    <div className="hero-3d-frame" aria-label="Interaktiv 3D WebGL-visualisering av AI-agent">
+    <div className="hero-3d-bg" aria-hidden="true">
       <div ref={mountRef} className="hero-3d-canvas" />
-      <div className="hero-3d-caption">
-        <span>WebGL · Three.js</span>
-        <span>Redo för Blender (.glb) &amp; Spline</span>
-      </div>
     </div>
   );
 }
+
+export default Hero3DCanvas;

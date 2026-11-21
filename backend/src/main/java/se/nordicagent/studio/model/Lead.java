@@ -35,6 +35,12 @@ public class Lead {
     @Column(nullable = false)
     private boolean gdprConsent;
 
+    @Column(nullable = false, length = 32)
+    private String consentVersion;
+
+    @Column(nullable = false)
+    private Instant consentAt;
+
     @Column(nullable = false, updatable = false)
     private Instant createdAt;
 
@@ -93,6 +99,22 @@ public class Lead {
 
     public void setGdprConsent(boolean gdprConsent) {
         this.gdprConsent = gdprConsent;
+    }
+
+    public String getConsentVersion() {
+        return consentVersion;
+    }
+
+    public void setConsentVersion(String consentVersion) {
+        this.consentVersion = consentVersion;
+    }
+
+    public Instant getConsentAt() {
+        return consentAt;
+    }
+
+    public void setConsentAt(Instant consentAt) {
+        this.consentAt = consentAt;
     }
 
     public Instant getCreatedAt() {

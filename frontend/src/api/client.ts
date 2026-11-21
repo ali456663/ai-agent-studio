@@ -12,6 +12,8 @@ export interface LeadPayload {
   industry: string;
   message: string;
   gdprConsent: boolean;
+  consentVersion: string;
+  consentAt: string;
 }
 
 export interface LeadResponse {

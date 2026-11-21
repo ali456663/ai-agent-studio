@@ -1,15 +1,18 @@
-import { useEffect, useState } from "react";
+import { lazy, Suspense, useEffect, useState } from "react";
+import { Calendar, CalendarX, Inbox, Mail, MessageSquare, PhoneMissed, Zap } from "lucide-react";
 import { ContactForm } from "./components/ContactForm";
 import { DemoSection } from "./components/DemoSection";
-import { Hero3DCanvas } from "./components/Hero3DCanvas";
+import { HeroMockup } from "./components/HeroMockup";
 import { LegalModal } from "./components/LegalModal";
 
+const Hero3DCanvas = lazy(() => import("./components/Hero3DCanvas"));
 const COOKIE_KEY = "nordicagent_cookie_notice_ack";
 
 export default function App() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [legalModal, setLegalModal] = useState<"privacy" | "security" | null>(null);
   const [showCookie, setShowCookie] = useState(false);
+  const [show3D, setShow3D] = useState(false);
 
   useEffect(() => {
     try {
@@ -19,6 +22,19 @@ export default function App() {
     } catch {
       setShowCookie(true);
     }
+  }, []);
+
+  useEffect(() => {
+    const mqWide = window.matchMedia("(min-width: 961px)");
+    const mqMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const update = () => setShow3D(mqWide.matches && !mqMotion.matches);
+    update();
+    mqWide.addEventListener("change", update);
+    mqMotion.addEventListener("change", update);
+    return () => {
+      mqWide.removeEventListener("change", update);
+      mqMotion.removeEventListener("change", update);
+    };
   }, []);
 
   function acceptCookie() {
@@ -52,8 +68,8 @@ export default function App() {
             <ul className={`nav-links ${menuOpen ? "open" : ""}`} onClick={() => setMenuOpen(false)}>
               <li><a href="#tjanster">Tjänster</a></li>
               <li><a href="#branscher">Branscher</a></li>
-              <li><a href="#demo">Live-demo</a></li>
-              <li><a href="#om-oss">Vårt team</a></li>
+              <li><a href="#demo">Prova demo</a></li>
+              <li><a href="#kom-igang">Så kommer ni igång</a></li>
               <li><a href="#priser">Paket</a></li>
               <li><a href="#faq">FAQ</a></li>
               <li><a className="btn btn-primary btn-sm" href="#kontakt">Boka demo</a></li>
@@ -63,29 +79,34 @@ export default function App() {
       </header>
 
       <main id="top">
-        {/* Hero med 3D WebGL / Three.js */}
+        {/* Hero med produktmockup och dämpad 3D-bakgrund */}
         <section className="hero">
           <div className="container hero-grid">
             <div>
-              <span className="badge">AI-agentstudio · Fullstack &amp; 3D WebGL</span>
-              <h1>Vi bygger skräddarsydda AI-agenter som avlastar ert företag – idag och i framtiden</h1>
+              <h1>Fyll tomma tider och svara kunderna dygnet runt</h1>
               <p className="lead">
-                Vårt team hjälper företag att designa, bygga och driftsätta säkra AI-agenter för bokningar, mailsvar,
-                kundchatt och sista minuten-erbjudanden. Byggt med modern arkitektur: React, TypeScript, 3D WebGL,
-                Spring Boot, Spring Security och PostgreSQL.
+                Vi bygger skräddarsydda AI-agenter för bokningar, mailsvar, kundchatt och sista minuten-erbjudanden –
+                anpassade efter era tider, priser och rutiner.
               </p>
               <div className="hero-actions">
                 <a className="btn btn-primary" href="#kontakt">Boka kostnadsfri rådgivning</a>
-                <a className="btn btn-secondary" href="#demo">Testa interaktiv demo</a>
+                <a className="btn btn-secondary" href="#demo">Prova kalendern</a>
               </div>
               <div className="trust-row">
-                <span>✓ Spring Security &amp; GDPR</span>
-                <span>✓ PostgreSQL &amp; REST API</span>
-                <span>✓ 3D Three.js / Blender / Spline</span>
+                <span>✓ Svar dygnet runt</span>
+                <span>✓ Anpassat efter er kalender</span>
+                <span>✓ Dataminimering enligt GDPR</span>
               </div>
             </div>
 
-            <Hero3DCanvas />
+            <div className="hero-visual">
+              {show3D && (
+                <Suspense fallback={null}>
+                  <Hero3DCanvas />
+                </Suspense>
+              )}
+              <HeroMockup />
+            </div>
           </div>
         </section>
 
@@ -94,23 +115,23 @@ export default function App() {
           <div className="container">
             <div className="section-header">
               <h2>Dagens situation → Framtidens lösning</h2>
-              <p>Vi tar bort vardagens flaskhalsar så att ert team får tid över till kunderna.</p>
+              <p>Vi tar bort vardagens flaskhalsar så att ni får tid över till kunderna.</p>
             </div>
             <div className="grid-3">
               <article className="card">
-                <div className="card-icon">📞</div>
+                <div className="card-icon" aria-hidden="true"><PhoneMissed size={22} /></div>
                 <h3>Missade samtal &amp; stress</h3>
                 <p>När ni sitter med en kund svarar er AI-agent direkt i chatt, bokning och e-post dygnet runt.</p>
               </article>
               <article className="card">
-                <div className="card-icon">📥</div>
+                <div className="card-icon" aria-hidden="true"><Inbox size={22} /></div>
                 <h3>Mail som blir liggande</h3>
-                <p>Automatiska, träffsäkra svar på återkommande frågor om tider, priser och förberedelser.</p>
+                <p>Snabba och tydliga svar på återkommande frågor om tider, priser och förberedelser.</p>
               </article>
               <article className="card">
-                <div className="card-icon">📅</div>
+                <div className="card-icon" aria-hidden="true"><CalendarX size={22} /></div>
                 <h3>Tomma tider i kalendern</h3>
-                <p>Sena återbud omvandlas automatiskt till synliga sista minuten-erbjudanden (-50 %).</p>
+                <p>Sena återbud kan automatiskt lyftas fram som sista minuten-erbjudanden (-50 %).</p>
               </article>
             </div>
           </div>
@@ -120,29 +141,29 @@ export default function App() {
         <section className="section section-alt" id="tjanster">
           <div className="container">
             <div className="section-header">
-              <h2>Vad vårt team bygger åt ert företag</h2>
-              <p>Skräddarsydda AI-agentmoduler anpassade efter era verktyg och säkerhetskrav.</p>
+              <h2>Vad vi bygger åt ert företag</h2>
+              <p>Skräddarsydda AI-agentmoduler anpassade efter era verktyg och kundflöden.</p>
             </div>
             <div className="grid-4">
               <article className="card">
-                <div className="card-icon">🗓️</div>
+                <div className="card-icon" aria-hidden="true"><Calendar size={22} /></div>
                 <h3>Automatisk bokning</h3>
-                <p>Visar lediga/upptagna tider i realtid och kopplas säkert mot kalender &amp; databas.</p>
+                <p>Visar lediga och upptagna tider i realtid och kopplas mot ert bokningsflöde.</p>
               </article>
               <article className="card">
-                <div className="card-icon">✉️</div>
+                <div className="card-icon" aria-hidden="true"><Mail size={22} /></div>
                 <h3>AI-mailsvar</h3>
-                <p>Svarar snabbt på kundmail 24/7 och eskalerar bara komplicerade ärenden till personalen.</p>
+                <p>Svarar på vanliga kundmail dygnet runt och skickar bara mer komplicerade ärenden vidare.</p>
               </article>
               <article className="card">
-                <div className="card-icon">💬</div>
+                <div className="card-icon" aria-hidden="true"><MessageSquare size={22} /></div>
                 <h3>Kundchatt 24/7</h3>
-                <p>Modern chatt på er hemsida som svarar om tjänster, priser och guidar kunden till bokning.</p>
+                <p>En chatt på er hemsida som svarar om tjänster, priser och guidar kunden till bokning.</p>
               </article>
               <article className="card">
-                <div className="card-icon">⚡</div>
+                <div className="card-icon" aria-hidden="true"><Zap size={22} /></div>
                 <h3>Sista minuten (-50 %)</h3>
-                <p>Fyller tomma luckor och sena avbokningar automatiskt för högre beläggning.</p>
+                <p>Fyller tomma luckor och sena avbokningar automatiskt för jämnare beläggning.</p>
               </article>
             </div>
           </div>
@@ -159,7 +180,7 @@ export default function App() {
               <article className="card card-featured">
                 <span className="pill-tag">Huvudfokus</span>
                 <h3>Tandläkare &amp; Vård</h3>
-                <p>Avlasta receptionen med GDPR-medvetna bokningsflöden och snabb återbudshantering.</p>
+                <p>Avlasta receptionen med tydliga bokningsflöden och snabb återbudshantering.</p>
               </article>
               <article className="card">
                 <span className="pill-tag">Skönhet</span>
@@ -183,33 +204,30 @@ export default function App() {
         {/* Interaktiv Demo */}
         <DemoSection />
 
-        {/* Vårt team & Teknikstack */}
-        <section className="section section-alt" id="om-oss">
+        {/* Så kommer ni igång */}
+        <section className="section section-alt" id="kom-igang">
           <div className="container">
             <div className="section-header">
-              <h2>Teamet bakom era AI-agenter</h2>
-              <p>Vi kombinerar UI/UX, 3D-design, robust Java-backend och cybersäkerhet under ett tak.</p>
+              <h2>Så kommer ni igång</h2>
+              <p>Tre tydliga steg från första samtal till färdig AI-agent i er vardag.</p>
             </div>
-            <div className="grid-3">
-              <article className="card">
-                <div className="team-avatar">BE</div>
-                <h3>Backend, API &amp; Databas</h3>
-                <div className="team-role">Java · Spring Boot · PostgreSQL</div>
-                <p>Bygger skalbara REST-API:er, kalenderintegrationer och säker datalagring med Spring Security.</p>
-              </article>
-              <article className="card">
-                <div className="team-avatar">FE</div>
-                <h3>UI/UX, Frontend &amp; 3D</h3>
-                <div className="team-role">React · TypeScript · Three.js · Blender · Spline</div>
-                <p>Skapar snabba, tillgängliga gränssnitt och engagerande 3D WebGL-upplevelser för moderna företag.</p>
-              </article>
-              <article className="card">
-                <div className="team-avatar">SEC</div>
-                <h3>Säkerhet &amp; DevOps</h3>
-                <div className="team-role">GDPR · NIS2 · Docker · GitHub Actions · Vercel</div>
-                <p>Härdade containers, automatiserade CI-kontroller, MFA och tydliga rutiner för incidenthantering.</p>
-              </article>
-            </div>
+            <ol className="grid-3 steps">
+              <li className="card">
+                <span className="step-num">1</span>
+                <h3>Kartläggning &amp; kalenderkoppling</h3>
+                <p>Vi går igenom era vanligaste kundfrågor, era rutiner för personuppgifter och kopplar in er kalender.</p>
+              </li>
+              <li className="card">
+                <span className="step-num">2</span>
+                <h3>Anpassning &amp; test</h3>
+                <p>Vi tränar AI-agenten på era tjänster, priser och regler för sista minuten-tider och testar tillsammans med er.</p>
+              </li>
+              <li className="card">
+                <span className="step-num">3</span>
+                <h3>Lansering &amp; löpande justering</h3>
+                <p>Agenten går live på er hemsida och i era kanaler, och vi finjusterar svaren utifrån riktiga kundfrågor.</p>
+              </li>
+            </ol>
           </div>
         </section>
 
@@ -218,7 +236,7 @@ export default function App() {
           <div className="container">
             <div className="section-header">
               <h2>Paket &amp; upplägg</h2>
-              <p>Börja enkelt och väx i er egen takt. Exempelpriser anpassas efter behov.</p>
+              <p>Börja enkelt och väx i er egen takt. Priserna nedan är exempel och anpassas efter behov.</p>
             </div>
             <div className="grid-3">
               <article className="card">
@@ -228,7 +246,7 @@ export default function App() {
                 <ul className="check-list">
                   <li>AI-kundchatt 24/7</li>
                   <li>Svar på priser &amp; vanliga frågor</li>
-                  <li>GDPR-anpassad konfiguration</li>
+                  <li>Anpassning efter era GDPR-krav</li>
                 </ul>
                 <a className="btn btn-secondary" href="#kontakt">Välj Start</a>
               </article>
@@ -238,7 +256,7 @@ export default function App() {
                 <p>Komplett avlastning för kliniker, salonger och verkstäder.</p>
                 <div className="price-amount">Från 5 900 kr/mån</div>
                 <ul className="check-list">
-                  <li>Allt i Start + live kalender-API</li>
+                  <li>Allt i Start + direkt kalenderkoppling</li>
                   <li>Automatiska AI-mailsvar</li>
                   <li>Sista minuten-erbjudanden (-50 %)</li>
                 </ul>
@@ -246,12 +264,12 @@ export default function App() {
               </article>
               <article className="card">
                 <h3>Företag / Skräddarsytt</h3>
-                <p>Flera avdelningar, egna system och utökad säkerhet.</p>
+                <p>Flera avdelningar, egna system och särskilda krav.</p>
                 <div className="price-amount">Offert</div>
                 <ul className="check-list">
-                  <li>Skräddarsydd Spring Boot &amp; AI-arkitektur</li>
-                  <li>Utökad loggning &amp; NIS2-dokumentation</li>
-                  <li>Dedikerat utvecklingsteam</li>
+                  <li>Anpassade integrationer mot era system</li>
+                  <li>Flera kalendrar, kliniker eller språk</li>
+                  <li>Löpande utveckling efter era behov</li>
                 </ul>
                 <a className="btn btn-secondary" href="#kontakt">Kontakta oss</a>
               </article>
@@ -268,15 +286,15 @@ export default function App() {
             <div className="faq-list">
               <details className="faq-item">
                 <summary>Behöver vi egen IT-avdelning för att ha en AI-agent?</summary>
-                <p>Nej, vårt team ansvarar för design, utveckling, säkerhet och drift så ni kan fokusera på verksamheten.</p>
+                <p>Nej, vi hjälper er hela vägen från kartläggning och inställningar till lansering och löpande justeringar.</p>
               </details>
               <details className="faq-item">
-                <summary>Hur skyddas vår kunddata (GDPR &amp; säkerhet)?</summary>
-                <p>Vi använder dataminimering, Spring Security, krypterad HTTPS-trafik, PostgreSQL-backup och tydliga behörighetsroller.</p>
+                <summary>Hur hanteras kundernas personuppgifter (GDPR)?</summary>
+                <p>Vi arbetar efter dataminimering och samlar bara in det som krävs för att besvara eller boka. Vi går igenom era specifika krav under rådgivningen.</p>
               </details>
               <details className="faq-item">
                 <summary>Kan vi börja litet och bygga ut senare?</summary>
-                <p>Ja! Arkitekturen är modulär så ni kan börja med bokning/chatt idag och lägga till fler AI-flöden framöver.</p>
+                <p>Ja! Ni kan börja med t.ex. kundchatt eller bokning idag och lägga till mailsvar och sista minuten-flöden när ni är redo.</p>
               </details>
             </div>
           </div>
@@ -286,15 +304,15 @@ export default function App() {
         <section className="section" id="kontakt">
           <div className="container contact-grid">
             <div>
-              <span className="badge">Kostnadsfri genomgång</span>
-              <h2>Boka demo med vårt team</h2>
-              <p>Berätta vad ni vill underlätta i er verksamhet så visar vi en skräddarsydd lösning.</p>
+              <h2>Boka demo med oss</h2>
+              <p>Berätta vad ni vill underlätta i er verksamhet så visar vi ett förslag anpassat efter er.</p>
               <ul className="check-list">
-                <li>Sparas säkert via Spring Boot API → PostgreSQL</li>
-                <li>Dataminimerat formulär (GDPR)</li>
-                <li>Svar normalt inom 1 arbetsdag</li>
+                <li>Kostnadsfri genomgång utan förpliktelser</li>
+                <li>Dataminimerat formulär enligt GDPR</li>
+                <li>Svar normalt inom en arbetsdag</li>
               </ul>
               <p>
+                {/* TODO: byt till riktiga adresser innan lansering */}
                 <strong>Kontakt:</strong> <a href="mailto:hej@nordicagent.se">hej@nordicagent.se</a><br />
                 <strong>Säkerhet:</strong> <a href="mailto:security@nordicagent.se">security@nordicagent.se</a>
               </p>
@@ -312,14 +330,14 @@ export default function App() {
           <div className="footer-grid">
             <div>
               <h3>NordicAgent Studio</h3>
-              <p>Fullstack AI-agentstudio för moderna företag – säkert, skalbart och byggt för framtiden.</p>
+              <p>Skräddarsydda AI-agenter för bokning, mailsvar, kundchatt och sista minuten-tider.</p>
             </div>
             <div>
               <h3>Navigering</h3>
               <ul>
                 <li><a href="#tjanster">Tjänster</a></li>
-                <li><a href="#demo">Live-demo</a></li>
-                <li><a href="#om-oss">Vårt team</a></li>
+                <li><a href="#demo">Prova demo</a></li>
+                <li><a href="#kom-igang">Så kommer ni igång</a></li>
                 <li><a href="#priser">Paket</a></li>
               </ul>
             </div>
@@ -333,9 +351,10 @@ export default function App() {
                 </li>
                 <li>
                   <button type="button" className="footer-link" onClick={() => setLegalModal("security")}>
-                    Säkerhet &amp; Incidenthantering
+                    Säkerhet &amp; Incidentrapportering
                   </button>
                 </li>
+                {/* TODO: verifiera att security.txt och e-post finns i produktion */}
                 <li><a href="/.well-known/security.txt">security.txt</a></li>
                 <li><a href="mailto:security@nordicagent.se">security@nordicagent.se</a></li>
               </ul>
@@ -344,7 +363,7 @@ export default function App() {
 
           <div className="footer-bottom">
             <span>© {new Date().getFullYear()} NordicAgent Studio</span>
-            <span>React + TypeScript + Three.js · Spring Boot (8087) + PostgreSQL</span>
+            <span>Inga spårningscookies</span>
           </div>
         </div>
       </footer>

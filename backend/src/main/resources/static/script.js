@@ -184,7 +184,9 @@
         company: document.getElementById("company").value.trim(),
         industry: document.getElementById("industry").value,
         message: document.getElementById("message").value.trim(),
-        gdprConsent: document.getElementById("gdprConsent").checked
+        gdprConsent: document.getElementById("gdprConsent").checked,
+        consentVersion: "2026-11-21",
+        consentAt: new Date().toISOString()
       };
 
       formStatus.className = "form-status";

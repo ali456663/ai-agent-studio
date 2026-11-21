@@ -17,6 +17,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.header.writers.ReferrerPolicyHeaderWriter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
@@ -36,8 +37,9 @@ public class SecurityConfig {
     private String adminPassword;
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain securityFilterChain(HttpSecurity http, LeadRateLimitFilter leadRateLimitFilter) throws Exception {
         http
+            .addFilterBefore(leadRateLimitFilter, UsernamePasswordAuthenticationFilter.class)
             .cors(Customizer.withDefaults())
             // Stateless JSON-API: ingen sessionscookie -> CSRF-token inte tillämplig för publika POST endpoints
             .csrf(csrf -> csrf.disable())

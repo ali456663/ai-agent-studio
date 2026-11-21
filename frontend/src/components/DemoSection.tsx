@@ -84,19 +84,28 @@ interface ChatMsg {
   text: string;
 }
 
-function buildDemoReply(text: string): string {
+const STATUS_LABEL: Record<DemoSlot["status"], string> = {
+  free: "Ledig",
+  busy: "Upptagen",
+  deal: "Sista minuten"
+};
+
+function buildDemoReply(text: string, slots: DemoSlot[]): string {
   const q = text.toLowerCase();
   if (q.includes("sista") || q.includes("rabatt") || q.includes("50") || q.includes("återbud")) {
-    return "Idag finns två sista minuten-luckor med -50 % rabatt markerade i gult i kalendern! När vi bygger er AI-agent känner den av avbokningar automatiskt.";
+    const deals = slots.filter((s) => s.status === "deal").length;
+    return deals > 0
+      ? `Just nu finns ${deals} sista minuten-tider med -50 % i kalendern, markerade i gult. I er egen agent läggs avbokade tider ut automatiskt.`
+      : "Just nu finns inga sista minuten-tider i den här kalendern. När en tid blir ledig läggs den ut automatiskt i er egen agent.";
   }
-  if (q.includes("gdpr") || q.includes("säker") || q.includes("nis2") || q.includes("spring")) {
-    return "Vår backend kör Spring Security + PostgreSQL med dataminimering, krypterad HTTPS-trafik, strikta säkerhetsheaders och rollstyrd åtkomst.";
+  if (q.includes("gdpr") || q.includes("säker") || q.includes("nis2")) {
+    return "Vi samlar bara in det som behövs för att boka och svara. Vi går gärna igenom hur era kunders uppgifter hanteras på en genomgång.";
   }
   if (q.includes("pris") || q.includes("kost") || q.includes("paket")) {
-    return "Våra paket börjar från 2 900 kr/mån (Start) och 5 900 kr/mån (Pro) med kalender-API och sista minuten-flöden.";
+    return "Våra paket börjar från 2 900 kr/mån (Start) och 5 900 kr/mån (Pro) med kalenderkoppling och sista minuten-flöden.";
   }
   if (q.includes("boka") || q.includes("tid") || q.includes("kalender") || q.includes("mail")) {
-    return "Kunden skriver i chatten, mailar eller klickar på en ledig tid. AI-agenten anropar ert kalender-API i realtid och skickar bekräftelse.";
+    return "Kunden skriver i chatten, mailar eller klickar på en ledig tid. AI-agenten kollar er kalender i realtid och skickar bekräftelse.";
   }
   return "Bra fråga! I en skarp AI-agent tränar vårt team svaren på era tjänster, priser och regler. Boka gärna en kostnadsfri genomgång längre ned!";
 }
@@ -142,7 +151,7 @@ export function DemoSection() {
       setFeedback(res.message);
     } catch {
       setFeedback(
-        `Demo-simulering (${industry}): AI-agenten skulle nu reservera ${slot.time} (${day}) – ${slot.service} (${slot.price}) och skicka bekräftelse.`
+        `Demo: AI-agenten skulle nu reservera ${slot.time} (${day}) – ${slot.service} (${slot.price}) och skicka bekräftelse.`
       );
     }
   }
@@ -153,7 +162,7 @@ export function DemoSection() {
     setMessages((prev) => [
       ...prev,
       { role: "user", text: trimmed },
-      { role: "bot", text: buildDemoReply(trimmed) }
+      { role: "bot", text: buildDemoReply(trimmed, slots) }
     ]);
   }
 
@@ -167,19 +176,19 @@ export function DemoSection() {
     <section className="section" id="demo">
       <div className="container">
         <div className="section-header">
-          <h2>Interaktiv demo: Kalender-API &amp; AI-kundchatt</h2>
+          <h2>Prova kalendern och chatten</h2>
           <p>
-            Testa hur ert företags kalender och kundchatt kan fungera.{" "}
-            <span className="api-pill">
-              {apiMode === "live" ? "🟢 Kopplad mot Spring Boot API (8087)" : "⚡ Lokal demo-data (starta backend på 8087 för live-API)"}
-            </span>
+            Så här kan en kund se lediga tider och få svar direkt. Tider och priser nedan är exempel.{" "}
+            {import.meta.env.DEV && (
+              <span className="api-pill">{apiMode === "live" ? "Dev: live-API" : "Dev: lokal demo-data"}</span>
+            )}
           </p>
         </div>
 
         <div className="demo-shell">
           <div className="card">
             <div className="demo-controls">
-              <div className="tab-group" role="tablist" aria-label="Välj bransch">
+              <div className="tab-group" role="group" aria-label="Välj bransch">
                 {(
                   [
                     ["tandlakare", "Tandläkare"],
@@ -191,6 +200,7 @@ export function DemoSection() {
                   <button
                     key={key}
                     type="button"
+                    aria-pressed={industry === key}
                     className={`tab-btn ${industry === key ? "active" : ""}`}
                     onClick={() => setIndustry(key)}
                   >
@@ -199,9 +209,10 @@ export function DemoSection() {
                 ))}
               </div>
 
-              <div className="tab-group" role="tablist" aria-label="Välj dag">
+              <div className="tab-group" role="group" aria-label="Välj dag">
                 <button
                   type="button"
+                  aria-pressed={day === "idag"}
                   className={`tab-btn ${day === "idag" ? "active" : ""}`}
                   onClick={() => setDay("idag")}
                 >
@@ -209,6 +220,7 @@ export function DemoSection() {
                 </button>
                 <button
                   type="button"
+                  aria-pressed={day === "imorgon"}
                   className={`tab-btn ${day === "imorgon" ? "active" : ""}`}
                   onClick={() => setDay("imorgon")}
                 >
@@ -242,9 +254,10 @@ export function DemoSection() {
                   onClick={() => handleSlotClick(slot)}
                 >
                   <span className="slot-time">{slot.time}</span>
-                  <span className="slot-meta">
-                    {slot.status === "busy" ? "Upptagen" : `${slot.service} · ${slot.price}`}
-                  </span>
+                  <span className="slot-status">{STATUS_LABEL[slot.status]}</span>
+                  {slot.status !== "busy" && (
+                    <span className="slot-meta">{`${slot.service}, ${slot.price}`}</span>
+                  )}
                 </button>
               ))}
             </div>
@@ -275,7 +288,7 @@ export function DemoSection() {
               <button type="button" className="prompt-chip" onClick={() => sendChat("Hur bokar en kund?")}>
                 Hur bokar en kund?
               </button>
-              <button type="button" className="prompt-chip" onClick={() => sendChat("Hur funkar GDPR och Spring Security?")}>
+              <button type="button" className="prompt-chip" onClick={() => sendChat("Hur hanteras GDPR?")}>
                 GDPR &amp; Säkerhet?
               </button>
             </div>
@@ -285,7 +298,7 @@ export function DemoSection() {
                 type="text"
                 value={chatInput}
                 onChange={(e) => setChatInput(e.target.value)}
-                placeholder="Skriv en testfråga (t.ex. pris, tid, GDPR)..."
+                placeholder="Skriv en testfråga, t.ex. pris, tid eller GDPR"
                 aria-label="Skriv en testfråga till AI-demon"
                 maxLength={160}
               />

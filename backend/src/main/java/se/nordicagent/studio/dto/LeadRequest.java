@@ -3,7 +3,9 @@ package se.nordicagent.studio.dto;
 import jakarta.validation.constraints.AssertTrue;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import java.time.Instant;
 
 public record LeadRequest(
     @NotBlank(message = "Namn är obligatoriskt")
@@ -27,6 +29,13 @@ public record LeadRequest(
     String message,
 
     @AssertTrue(message = "GDPR-samtycke krävs")
-    boolean gdprConsent
+    boolean gdprConsent,
+
+    @NotBlank(message = "Samtyckesversion krävs")
+    @Size(max = 32)
+    String consentVersion,
+
+    @NotNull(message = "Tidpunkt för samtycke krävs")
+    Instant consentAt
 ) {
 }

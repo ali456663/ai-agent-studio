@@ -457,24 +457,7 @@ a:hover {
   border-radius: var(--radius-sm);
 }
 
-/* Team, Prices, FAQ, Contact */
-.team-avatar {
-  width: 46px;
-  height: 46px;
-  border-radius: 50%;
-  background: linear-gradient(135deg, var(--primary), var(--accent));
-  color: #fff;
-  display: grid;
-  place-items: center;
-  font-weight: 800;
-  margin-bottom: 12px;
-}
-.team-role {
-  font-size: 0.84rem;
-  font-weight: 700;
-  color: var(--accent-dark);
-  margin-bottom: 8px;
-}
+/* Prices, FAQ, Contact */
 .price-amount { font-size: 1.8rem; font-weight: 800; margin: 12px 0; }
 .check-list { list-style: none; padding: 0; margin: 0 0 20px; display: grid; gap: 8px; color: var(--text-muted); font-size: 0.92rem; }
 .check-list li::before { content: "✓ "; color: var(--accent); font-weight: 800; }
@@ -573,4 +556,38 @@ details.faq-item p { margin: 10px 0 0; color: var(--text-muted); }
   .nav-links.open { display: flex; }
   .grid-3, .grid-4 { grid-template-columns: 1fr; }
   .cookie-banner { flex-direction: column; align-items: flex-start; }
+}
+
+/* ---- Tillägg: hero-mockup, 3D-bakgrund, steg, tillgänglighet ---- */
+.hero-visual { position: relative; min-height: 420px; display: grid; align-items: center; }
+.hero-3d-bg { position: absolute; inset: -24px -16px; opacity: 0.5; pointer-events: none; }
+.hero-3d-bg .hero-3d-canvas { height: 100%; cursor: default; }
+
+.mock { position: relative; z-index: 1; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); box-shadow: var(--shadow-lg); padding: 20px; display: grid; gap: 16px; }
+.mock-head { display: flex; justify-content: space-between; align-items: baseline; font-size: 0.95rem; }
+.mock-head span { color: var(--text-muted); font-size: 0.85rem; }
+.mock-slots { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+.mock-slot { display: flex; gap: 14px; align-items: baseline; padding: 10px 12px; border-width: 1px; border-style: solid; border-radius: var(--radius-sm); font-size: 0.88rem; cursor: default; }
+.mock-slot .slot-time { display: inline; min-width: 46px; }
+.mock-chat { display: grid; gap: 8px; border-top: 1px solid var(--border); padding-top: 14px; }
+.mock-chat .chat-msg { margin: 0; }
+.mock-chat .chat-user { justify-self: end; }
+.mock-chat .chat-bot { justify-self: start; }
+
+.slot-status { display: block; font-size: 0.78rem; font-weight: 700; margin-top: 2px; }
+.hp-field { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+.card-icon svg { color: var(--primary); }
+.steps { list-style: none; margin: 0; padding: 0; }
+.step-num { display: inline-grid; place-items: center; width: 32px; height: 32px; border-radius: 50%; background: var(--primary); color: #fff; font-weight: 800; margin-bottom: 12px; }
+
+:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .btn { transition: none; }
+  .btn:hover { transform: none; }
+}
+@media (max-width: 960px) {
+  .hero-visual { min-height: 0; }
+  .hero-3d-bg { display: none; }
 }
