@@ -4,6 +4,34 @@
   const yearEl = document.getElementById("year");
   if (yearEl) yearEl.textContent = String(new Date().getFullYear());
 
+  // Interaktiv Orderagent-demo (avvikelsekontroll för säljaren)
+  const orderWarnRow = document.getElementById("orderWarnRow");
+  const orderWarnStatus = document.getElementById("orderWarnStatus");
+  const btnAdjust = document.getElementById("btnAdjustPrice");
+  const btnApprove = document.getElementById("btnApprovePrice");
+  const btnReset = document.getElementById("btnResetOrder");
+
+  if (orderWarnRow && orderWarnStatus) {
+    if (btnAdjust) {
+      btnAdjust.addEventListener("click", () => {
+        orderWarnRow.className = "row-ok";
+        orderWarnStatus.textContent = "✓ Justerad till offertpris (265 kr)";
+      });
+    }
+    if (btnApprove) {
+      btnApprove.addEventListener("click", () => {
+        orderWarnRow.className = "row-ok";
+        orderWarnStatus.textContent = "✓ Godkänd av säljare (210 kr)";
+      });
+    }
+    if (btnReset) {
+      btnReset.addEventListener("click", () => {
+        orderWarnRow.className = "row-warn";
+        orderWarnStatus.textContent = "⚠ Avvikelse: 210 kr i PDF (offert 265 kr)";
+      });
+    }
+  }
+
   // Dämpad 3D-partikelbakgrund bakom produktmockupen (pausar vid reduced-motion)
   const canvas = document.getElementById("heroCanvas");
   const reducedMotion = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;

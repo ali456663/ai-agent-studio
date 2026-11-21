@@ -31,18 +31,18 @@
     <section class="hero">
       <div class="container hero-grid">
         <div>
-          <h1>Fyll tomma tider och svara kunderna dygnet runt</h1>
+          <h1>Från inkommande mejl till färdig bokning, order, offert eller serviceärende</h1>
           <p class="lead">
-            Vi bygger skräddarsydda AI-agenter för bokningar, mailsvar, kundchatt och sista minuten-erbjudanden –
-            anpassade efter era tider, priser och rutiner.
+            Vi bygger AI-agenter som arbetar i era befintliga system. Agenten samlar in uppgifter, kontrollerar dem och
+            förbereder nästa steg. Er personal granskar avvikelser och godkänner viktiga beslut.
           </p>
           <div class="hero-actions">
-            <a class="btn btn-primary" href="#kontakt">Boka kostnadsfri rådgivning</a>
-            <a class="btn btn-secondary" href="#demo">Prova kalendern &amp; AI-assistenten</a>
+            <a class="btn btn-primary" href="#kontakt">Visa oss ett arbetsflöde</a>
+            <a class="btn btn-secondary" href="#orderagent">Se orderagenten live</a>
           </div>
           <div class="trust-row">
-            <span>✓ Svar dygnet runt</span>
-            <span>✓ Anpassat efter er kalender</span>
+            <span>✓ Svar &amp; bokning dygnet runt</span>
+            <span>✓ Personalen godkänner avvikelser</span>
             <span>✓ Dataminimering enligt GDPR</span>
           </div>
         </div>
@@ -51,30 +51,65 @@
           <div class="hero-3d-bg" aria-hidden="true">
             <canvas id="heroCanvas" class="hero-3d-canvas"></canvas>
           </div>
-          <div class="mock" aria-label="Exempel på kalender och AI-chatt">
-            <div class="mock-head">
-              <strong>Dagens schema (exempel)</strong>
-              <span>Tandkliniken Centrum</span>
+          <figure class="hero-media-card">
+            <img src="/images/ai-agent-hero.jpg" alt="AI-agent som analyserar bokningar, order och kundärenden" class="hero-media-img">
+            <figcaption class="hero-media-overlay">
+              <strong>Kontroll i varje steg</strong>
+              Läser inkommande ärenden, flaggar avvikelser och förbereder nästa åtgärd åt ert team.
+            </figcaption>
+          </figure>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section-alt" id="orderagent">
+      <div class="container">
+        <div class="section-header">
+          <h2>Exempel: Orderagenten i praktiken</h2>
+          <p>Agenten läser kundens beställning, jämför mot er offert och markerar rader med avvikande pris så säljaren behåller kontrollen.</p>
+        </div>
+        <div class="order-demo-grid">
+          <article class="card">
+            <span class="pill-tag">1. Inkommande beställning (PDF / mejl)</span>
+            <h3>Från: Nordisk Industri AB</h3>
+            <div class="order-mail-box">
+              <p><strong>Ämne:</strong> Beställning enligt offert #OF-4821 – önskad leverans fredag</p>
+              <table class="order-table">
+                <thead>
+                  <tr><th>Art.nr</th><th>Antal</th><th>Pris i PDF</th></tr>
+                </thead>
+                <tbody>
+                  <tr><td>AX-204 Ventilblock</td><td>12 st</td><td>1 450 kr</td></tr>
+                  <tr class="row-warn"><td>BR-880 Packningssats</td><td>25 st</td><td>210 kr</td></tr>
+                  <tr><td>KM-112 Givarkabel</td><td>8 st</td><td>390 kr</td></tr>
+                </tbody>
+              </table>
             </div>
-            <ul class="mock-slots">
-              <li class="mock-slot slot-busy">
-                <span class="slot-time">09:00</span>
-                <span>Upptagen · Undersökning</span>
-              </li>
-              <li class="mock-slot slot-free">
-                <span class="slot-time">10:30</span>
-                <span>Ledig · Basundersökning (990 kr)</span>
-              </li>
-              <li class="mock-slot slot-deal">
-                <span class="slot-time">13:00</span>
-                <span>Sista minuten (-50 %) · Tandhygienist (495 kr)</span>
-              </li>
-            </ul>
-            <div class="mock-chat">
-              <p class="chat-msg chat-user">Hej, har ni någon ledig tid i eftermiddag?</p>
-              <p class="chat-msg chat-bot">Ja! Kl. 13:00 fick vi precis ett återbud med 50 % rabatt (495 kr). Vill du att jag bokar in dig?</p>
+          </article>
+
+          <article class="card card-featured">
+            <span class="pill-tag">2. Färdigt orderutkast med avvikelsekontroll</span>
+            <h3>Förberett åt säljaren</h3>
+            <table class="order-table">
+              <thead>
+                <tr><th>Artikel</th><th>Offert</th><th>Status</th></tr>
+              </thead>
+              <tbody>
+                <tr class="row-ok"><td>AX-204 (12 st)</td><td>1 450 kr</td><td>✓ Matchar offert</td></tr>
+                <tr class="row-warn" id="orderWarnRow">
+                  <td>BR-880 (25 st)</td>
+                  <td>265 kr</td>
+                  <td id="orderWarnStatus">⚠ Avvikelse: 210 kr i PDF (offert 265 kr)</td>
+                </tr>
+                <tr class="row-ok"><td>KM-112 (8 st)</td><td>390 kr</td><td>✓ Matchar offert</td></tr>
+              </tbody>
+            </table>
+            <div class="order-actions">
+              <button class="btn btn-primary btn-sm" id="btnAdjustPrice" type="button">Justera till offertpris (265 kr)</button>
+              <button class="btn btn-secondary btn-sm" id="btnApprovePrice" type="button">Godkänn kundens pris (210 kr)</button>
+              <button class="btn btn-secondary btn-sm" id="btnResetOrder" type="button">Återställ</button>
             </div>
-          </div>
+          </article>
         </div>
       </div>
     </section>
@@ -183,6 +218,91 @@
             </form>
             <button class="btn btn-secondary btn-sm" id="sendIdeaToForm" type="button">Ta med min idé till rådgivning ↓</button>
           </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="verkstad-flode">
+      <div class="container">
+        <div class="section-header">
+          <h2>Exempel i vardagen: AI-agent för bilverkstad</h2>
+          <p>En enda kundmening på söndagskvällen kan innehålla flera uppgifter. Så här avlastar agenten hela verkstadsflödet:</p>
+        </div>
+        <blockquote class="quote-callout">
+          ”Jag vill byta till vinterdäck på fredag. Hjulen ligger hos er. Har ni någon tid efter tre?”
+        </blockquote>
+        <div class="grid-3">
+          <article class="card">
+            <span class="step-num">1</span>
+            <h3>Boka rätt jobb &amp; resurser</h3>
+            <p>Frågar t.ex. ”Sitter vinterdäcken redan på fälg?”, kollar däckhotell, lyft och mekaniker och erbjuder tider som faktiskt ryms.</p>
+          </article>
+          <article class="card">
+            <span class="step-num">2</span>
+            <h3>Fullbokning, återbud &amp; ombokning</h3>
+            <p>Bokar första lediga tid och sätter kunden på väntelista för återbud. Ombokning sköts direkt i samma konversation.</p>
+          </article>
+          <article class="card">
+            <span class="step-num">3</span>
+            <h3>Förberedd arbetsorder</h3>
+            <p>Samlar regnummer, mätarställning och symtom (t.ex. skrapande ljud vid inbromsning) till mekanikern. Säkerhetsfrågor går till människa.</p>
+          </article>
+          <article class="card">
+            <span class="step-num">4</span>
+            <h3>Godkännande av extraarbete</h3>
+            <p>Skickar prisförslag under besöket (t.ex. kupéfilter 450 kr inkl. arbete och moms) och sparar kundens svar direkt på arbetsordern.</p>
+          </article>
+          <article class="card">
+            <span class="step-num">5</span>
+            <h3>Statusbesked &amp; hämtning</h3>
+            <p>Skiljer på inlämningstid, uppskattad sluttid och klar för hämtning, och skickar sms med slutbelopp och öppettider.</p>
+          </article>
+          <article class="card">
+            <span class="step-num">6</span>
+            <h3>Morgonsammanställning</h3>
+            <p>Flaggar saknade reservdelar, väntande prisförslag, lediga återbudsluckor och lånebilskrockar innan arbetsdagen börjar.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section-alt" id="foretagsagenter">
+      <div class="container">
+        <div class="section-header">
+          <h2>Sex AI-agenter för större företag &amp; industri</h2>
+          <p>Agenten läser mejl, hittar rätt uppgifter i era system, upptäcker avvikelser och förbereder nästa åtgärd åt er personal.</p>
+        </div>
+        <div class="grid-3">
+          <article class="card">
+            <h3>Inköpsagent</h3>
+            <p>Hittar påverkade jobb när en leverantör meddelar försening – så inköparen direkt ser vad som kräver åtgärd idag.</p>
+            <span class="metric-tag">Mätetal: Tid från besked till åtgärd</span>
+          </article>
+          <article class="card">
+            <h3>Orderagent</h3>
+            <p>Läser PDF-beställning, jämför mot offert, skapar orderutkast och markerar rader med avvikande pris för säljaren.</p>
+            <span class="metric-tag">Mätetal: Minuter per order</span>
+          </article>
+          <article class="card">
+            <h3>Serviceagent</h3>
+            <p>Samlar in modell, serienummer och felkod, hittar rätt manualversion och ger serviceteknikern ett komplett ärende direkt.</p>
+            <span class="metric-tag">Mätetal: Kompletta ärenden vid första kontakt</span>
+          </article>
+          <article class="card">
+            <h3>Dokumentagent</h3>
+            <p>Söker enbart i dokument användaren har behörighet till, visar gällande kvalitetsmall med version och källa.</p>
+            <span class="metric-tag">Mätetal: Tid att hitta rätt version</span>
+          </article>
+          <article class="card">
+            <h3>Kvalitetsagent</h3>
+            <p>Kopplar avvikelser till artikel och leverantör, samlar bilder/mätvärden och tar fram liknande tidigare ärenden.</p>
+            <span class="metric-tag">Mätetal: Tid till komplett utredningsunderlag</span>
+          </article>
+          <article class="card">
+            <h3>Offertagent</h3>
+            <p>Samlar kundens krav ur långa offertförfrågningar med sidhänvisning och visar vilka frågor säljteamet behöver svar på.</p>
+            <span class="metric-tag">Mätetal: Timmar till första offertutkast</span>
+          </article>
         </div>
       </div>
     </section>

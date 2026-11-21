@@ -56,6 +56,7 @@ public class SecurityConfig {
                     "/styles.css",
                     "/script.js",
                     "/favicon.svg",
+                    "/images/**",
                     "/assets/**",
                     "/.well-known/**",
                     "/error"

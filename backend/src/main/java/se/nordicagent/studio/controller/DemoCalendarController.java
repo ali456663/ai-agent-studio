@@ -46,22 +46,32 @@ public class DemoCalendarController {
         String q = idea.toLowerCase();
 
         String reply;
-        if (q.contains("tand") || q.contains("klinik") || q.contains("vård")) {
+        if (q.contains("inköp") || q.contains("leverantör") || q.contains("volvo") || q.contains("försen")) {
+            reply = "Med en inköpsagent läser systemet leverantörens förseningsmejl, matchar inköpsordern och visar direkt vilka planerade jobb som påverkas – så inköparen vet exakt vad som kräver åtgärd idag.";
+        } else if (q.contains("order") || q.contains("pdf") || q.contains("avvik") || q.contains("beställ")) {
+            reply = "Orderagenten läser artikelnummer, antal och datum ur kundens PDF-beställning, jämför mot offerten, skapar ett orderutkast och flaggar rader med avvikande pris för säljaren.";
+        } else if (q.contains("offert") || q.contains("anbud") || q.contains("krav")) {
+            reply = "Offertagenten går igenom omfattande offertförfrågningar, sammanställer kraven med sidhänvisning och markerar vilka frågor säljteamet behöver klarlägga.";
+        } else if (q.contains("dokument") || q.contains("mall") || q.contains("saab") || q.contains("kvalitet")) {
+            reply = "Dokument- och kvalitetsagenten söker enbart i dokument som användaren har behörighet till, visar gällande version med källa och samlar bilder/mätvärden inför utredning.";
+        } else if (q.contains("service") || q.contains("abb") || q.contains("manual") || q.contains("serienummer")) {
+            reply = "Serviceagenten samlar in modell, serienummer och felkod, hittar rätt manualversion och förbereder ett komplett ärende till serviceteknikern redan vid första kontakten.";
+        } else if (q.contains("däck") || q.contains("bil") || q.contains("verkstad") || q.contains("arbetsorder") || q.contains("kupé")) {
+            reply = "För en bilverkstad kan agenten boka rätt resurser (lyft/mekaniker), kolla däckhotell, sköta väntelista vid återbud, förbereda arbetsorder, hämta kundens godkännande på extraarbete (t.ex. kupéfilter 450 kr) och skicka sms när bilen är klar.";
+        } else if (q.contains("tand") || q.contains("klinik") || q.contains("vård")) {
             reply = "För en klinik passar en AI-agent som hanterar bokningar, svarar på vanliga frågor dygnet runt och automatiskt lyfter fram återbud som sista minuten-tider (-50 %) – utan att känsliga journaluppgifter sparas i chatten.";
         } else if (q.contains("frisör") || q.contains("salong") || q.contains("klipp")) {
             reply = "För en salong kan AI-agenten ta emot bokningar medan ni klipper, svara på priser och fylla tomma luckor samma dag med sista minuten-erbjudanden.";
         } else if (q.contains("massage") || q.contains("naprapat") || q.contains("hälsa")) {
             reply = "För massage och friskvård hjälper agenten kunder att hitta rätt behandling, boka direkt i kalendern och skicka påminnelser så färre tider missas.";
-        } else if (q.contains("bil") || q.contains("verkstad") || q.contains("däck")) {
-            reply = "För en bilverkstad kan AI-agenten boka service och däckskifte, svara på frågor om tider/priser och minska telefonkön under högsäsong.";
         } else if (q.contains("sista") || q.contains("avbok") || q.contains("tomma") || q.contains("50")) {
-            reply = "När en kund avbokar känner AI-agenten av luckan och kan direkt visa den som en sista minuten-tid med t.ex. -50 % rabatt så kalendern fylls igen.";
+            reply = "När en kund avbokar känner AI-agenten av luckan och kan direkt erbjuda den till väntelistan eller visa den som sista minuten med t.ex. -50 % rabatt.";
         } else if (q.contains("gdpr") || q.contains("säker") || q.contains("data")) {
-            reply = "Vi utgår alltid från dataminimering enligt GDPR och samlar bara in det som behövs för bokning och kontakt. Vi går igenom era exakta krav vid en genomgång.";
+            reply = "Vi utgår alltid från dataminimering enligt GDPR, behörighetsstyrning och tydlig mänsklig kontroll där personalen godkänner viktiga beslut.";
         } else if (q.contains("pris") || q.contains("kost") || q.contains("paket")) {
-            reply = "Våra paket börjar från 2 900 kr/mån (Start) och 5 900 kr/mån (Pro) med kalenderkoppling, mailsvar och sista minuten-flöden.";
+            reply = "Våra paket börjar från 2 900 kr/mån (Start) och 5 900 kr/mån (Pro) samt skräddarsydda företagsflöden efter offert.";
         } else {
-            reply = "Spännande idé! Utifrån det du beskriver kan vi kombinera kundchatt, automatisk bokning och mailsvar anpassade efter era tjänster och priser. Klicka på \"Skicka idén till oss\" så går vi igenom ett konkret upplägg!";
+            reply = "Spännande idé! Utifrån det du beskriver kan vi bygga en AI-agent som samlar in uppgifter, kontrollerar mot era system och förbereder nästa steg åt er personal. Klicka på \"Ta med min idé till rådgivning\" nedan så går vi igenom ett konkret upplägg!";
         }
 
         return Map.of("reply", reply);

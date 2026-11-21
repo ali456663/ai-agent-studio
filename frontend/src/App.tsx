@@ -2,8 +2,9 @@ import { lazy, Suspense, useEffect, useState } from "react";
 import { Calendar, CalendarX, Inbox, Mail, MessageSquare, PhoneMissed, Zap } from "lucide-react";
 import { ContactForm } from "./components/ContactForm";
 import { DemoSection } from "./components/DemoSection";
-import { HeroMockup } from "./components/HeroMockup";
+import { EnterpriseAgentsSection } from "./components/EnterpriseAgentsSection";
 import { LegalModal } from "./components/LegalModal";
+import { OrderAgentDemo } from "./components/OrderAgentDemo";
 
 const Hero3DCanvas = lazy(() => import("./components/Hero3DCanvas"));
 const COOKIE_KEY = "nordicagent_cookie_notice_ack";
@@ -79,22 +80,22 @@ export default function App() {
       </header>
 
       <main id="top">
-        {/* Hero med produktmockup och dämpad 3D-bakgrund */}
+        {/* Hero med AI-agentbild, mjuk motion och tydligt värdeerbjudande */}
         <section className="hero">
           <div className="container hero-grid">
             <div>
-              <h1>Fyll tomma tider och svara kunderna dygnet runt</h1>
+              <h1>Från inkommande mejl till färdig bokning, order, offert eller serviceärende</h1>
               <p className="lead">
-                Vi bygger skräddarsydda AI-agenter för bokningar, mailsvar, kundchatt och sista minuten-erbjudanden –
-                anpassade efter era tider, priser och rutiner.
+                Vi bygger AI-agenter som arbetar i era befintliga system. Agenten samlar in uppgifter, kontrollerar dem
+                och förbereder nästa steg. Er personal granskar avvikelser och godkänner viktiga beslut.
               </p>
               <div className="hero-actions">
-                <a className="btn btn-primary" href="#kontakt">Boka kostnadsfri rådgivning</a>
-                <a className="btn btn-secondary" href="#demo">Prova kalendern</a>
+                <a className="btn btn-primary" href="#kontakt">Visa oss ett arbetsflöde</a>
+                <a className="btn btn-secondary" href="#orderagent">Se orderagenten live</a>
               </div>
               <div className="trust-row">
-                <span>✓ Svar dygnet runt</span>
-                <span>✓ Anpassat efter er kalender</span>
+                <span>✓ Svar &amp; bokning dygnet runt</span>
+                <span>✓ Personalen godkänner avvikelser</span>
                 <span>✓ Dataminimering enligt GDPR</span>
               </div>
             </div>
@@ -105,10 +106,23 @@ export default function App() {
                   <Hero3DCanvas />
                 </Suspense>
               )}
-              <HeroMockup />
+              <figure className="hero-media-card">
+                <img
+                  src="/images/ai-agent-hero.jpg"
+                  alt="AI-agent som analyserar bokningar, order och kundärenden"
+                  className="hero-media-img"
+                />
+                <figcaption className="hero-media-overlay">
+                  <strong>Kontroll i varje steg</strong>
+                  Läser inkommande ärenden, flaggar avvikelser och förbereder nästa åtgärd åt ert team.
+                </figcaption>
+              </figure>
             </div>
           </div>
         </section>
+
+        {/* Interaktiv demonstration av Orderagenten */}
+        <OrderAgentDemo />
 
         {/* Problemet */}
         <section className="section" id="problemet">
@@ -203,6 +217,9 @@ export default function App() {
 
         {/* Interaktiv Demo */}
         <DemoSection />
+
+        {/* Bilverkstad (6 flöden) & Sex företagsagenter */}
+        <EnterpriseAgentsSection />
 
         {/* Så kommer ni igång */}
         <section className="section section-alt" id="kom-igang">
