@@ -1,0 +1,214 @@
+(function () {
+  "use strict";
+
+  const yearEl = document.getElementById("year");
+  if (yearEl) yearEl.textContent = String(new Date().getFullYear());
+
+  // Enkel interaktiv 3D-inspirerad partikelanimation på hero-canvasen
+  const canvas = document.getElementById("heroCanvas");
+  if (canvas && canvas.getContext) {
+    const ctx = canvas.getContext("2d");
+    const resize = () => {
+      canvas.width = canvas.clientWidth || 420;
+      canvas.height = canvas.clientHeight || 340;
+    };
+    resize();
+    window.addEventListener("resize", resize);
+
+    const nodes = Array.from({ length: 42 }, (_, i) => ({
+      a: (i / 42) * Math.PI * 2,
+      r: 55 + (i % 5) * 22,
+      speed: 0.004 + (i % 4) * 0.002,
+      phase: i * 0.7
+    }));
+
+    let t = 0;
+    function draw() {
+      t += 0.015;
+      const w = canvas.width;
+      const h = canvas.height;
+      ctx.clearRect(0, 0, w, h);
+
+      const cx = w / 2;
+      const cy = h / 2;
+
+      const pts = nodes.map((n) => {
+        const ang = n.a + t * (n.speed * 100);
+        const x = cx + Math.cos(ang) * n.r * (0.9 + 0.15 * Math.sin(t + n.phase));
+        const y = cy + Math.sin(ang) * n.r * 0.65 * Math.cos(n.phase * 0.5 + t * 0.4);
+        return { x, y };
+      });
+
+      ctx.strokeStyle = "rgba(20, 184, 166, 0.25)";
+      ctx.lineWidth = 1;
+      for (let i = 0; i < pts.length; i++) {
+        for (let j = i + 1; j < pts.length; j++) {
+          const dx = pts[i].x - pts[j].x;
+          const dy = pts[i].y - pts[j].y;
+          if (dx * dx + dy * dy < 5200) {
+            ctx.beginPath();
+            ctx.moveTo(pts[i].x, pts[i].y);
+            ctx.lineTo(pts[j].x, pts[j].y);
+            ctx.stroke();
+          }
+        }
+      }
+
+      pts.forEach((p) => {
+        ctx.fillStyle = "#38bdf8";
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, 3, 0, Math.PI * 2);
+        ctx.fill();
+      });
+
+      requestAnimationFrame(draw);
+    }
+    draw();
+  }
+
+  // Live demokalender mot Spring Boot API (/api/demo/slots & /api/demo/book)
+  let currentIndustry = "tandlakare";
+  let currentDay = "idag";
+  const slotsGrid = document.getElementById("slotsGrid");
+  const demoFeedback = document.getElementById("demoFeedback");
+
+  async function loadSlots() {
+    if (!slotsGrid) return;
+    try {
+      const res = await fetch(`/api/demo/slots?industry=${encodeURIComponent(currentIndustry)}&day=${encodeURIComponent(currentDay)}`);
+      const slots = await res.json();
+      slotsGrid.innerHTML = "";
+
+      slots.forEach((slot) => {
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = `slot-btn slot-${slot.status}`;
+        if (slot.status === "busy") btn.disabled = true;
+
+        const t = document.createElement("span");
+        t.className = "slot-time";
+        t.textContent = slot.time;
+
+        const m = document.createElement("span");
+        m.className = "slot-meta";
+        m.textContent = slot.status === "busy" ? "Upptagen" : `${slot.service} · ${slot.price}`;
+
+        btn.appendChild(t);
+        btn.appendChild(m);
+
+        if (slot.status !== "busy") {
+          btn.addEventListener("click", async () => {
+            const r = await fetch("/api/demo/book", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ industry: currentIndustry, day: currentDay, time: slot.time })
+            });
+            const data = await r.json();
+            if (demoFeedback) {
+              demoFeedback.textContent = data.message;
+              demoFeedback.style.display = "block";
+            }
+          });
+        }
+
+        slotsGrid.appendChild(btn);
+      });
+    } catch {
+      slotsGrid.textContent = "Kunde inte hämta tider från /api/demo/slots.";
+    }
+  }
+
+  document.querySelectorAll("[data-industry]").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      document.querySelectorAll("[data-industry]").forEach((b) => b.classList.remove("active"));
+      btn.classList.add("active");
+      currentIndustry = btn.getAttribute("data-industry") || "tandlakare";
+      if (demoFeedback) demoFeedback.style.display = "none";
+      loadSlots();
+    });
+  });
+
+  document.querySelectorAll("[data-day]").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      document.querySelectorAll("[data-day]").forEach((b) => b.classList.remove("active"));
+      btn.classList.add("active");
+      currentDay = btn.getAttribute("data-day") || "idag";
+      if (demoFeedback) demoFeedback.style.display = "none";
+      loadSlots();
+    });
+  });
+
+  loadSlots();
+
+  // AI-chatt demo
+  const chatForm = document.getElementById("chatForm");
+  const chatInput = document.getElementById("chatInput");
+  const chatLog = document.getElementById("chatLog");
+  if (chatForm && chatInput && chatLog) {
+    chatForm.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const q = chatInput.value.trim();
+      if (!q) return;
+
+      const u = document.createElement("div");
+      u.className = "chat-msg chat-user";
+      u.textContent = q;
+
+      const b = document.createElement("div");
+      b.className = "chat-msg chat-bot";
+      const low = q.toLowerCase();
+      if (low.includes("sista") || low.includes("50")) {
+        b.textContent = "Gula tider i kalendern är sista minuten med -50 % rabatt – klicka på en för att testa live-API:et!";
+      } else if (low.includes("gdpr") || low.includes("säker")) {
+        b.textContent = "Startsidan är publik, medan /api/admin/** är skyddat med Spring Security och databasen följer GDPR-dataminimering.";
+      } else {
+        b.textContent = "Tack för din fråga! I er skarpa AI-agent tränar vårt team svaren utifrån era tjänster, priser och kalender.";
+      }
+
+      chatLog.appendChild(u);
+      chatLog.appendChild(b);
+      chatLog.scrollTop = chatLog.scrollHeight;
+      chatInput.value = "";
+    });
+  }
+
+  // Kontaktformulär -> POST /api/leads (sparas i databas!)
+  const contactForm = document.getElementById("contactForm");
+  const formStatus = document.getElementById("formStatus");
+  if (contactForm && formStatus) {
+    contactForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const payload = {
+        name: document.getElementById("name").value.trim(),
+        email: document.getElementById("email").value.trim(),
+        company: document.getElementById("company").value.trim(),
+        industry: document.getElementById("industry").value,
+        message: document.getElementById("message").value.trim(),
+        gdprConsent: document.getElementById("gdprConsent").checked
+      };
+
+      formStatus.className = "form-status";
+      if (!payload.name || !payload.email || !payload.company || !payload.gdprConsent) {
+        formStatus.textContent = "Fyll i namn, e-post, företag och godkänn GDPR.";
+        formStatus.classList.add("error");
+        return;
+      }
+
+      try {
+        const res = await fetch("/api/leads", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload)
+        });
+        if (!res.ok) throw new Error();
+        const saved = await res.json();
+        formStatus.textContent = `Tack ${payload.name}! Förfrågan #${saved.id} för ${saved.company} sparades i databasen.`;
+        formStatus.classList.add("success");
+        contactForm.reset();
+      } catch {
+        formStatus.textContent = "Kunde inte skicka förfrågan. Kontrollera e-postadressen och försök igen.";
+        formStatus.classList.add("error");
+      }
+    });
+  }
+})();

@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NordicAgent Studio – Vi bygger säkra AI-agenter för ert företag</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="container nav-wrap">
+      <a class="brand" href="#top">
+        <span class="brand-mark" aria-hidden="true">NA</span>
+        <span>NordicAgent Studio</span>
+      </a>
+      <nav aria-label="Huvudmeny">
+        <ul class="nav-links">
+          <li><a href="#tjanster">Tjänster</a></li>
+          <li><a href="#branscher">Branscher</a></li>
+          <li><a href="#demo">Live-demo</a></li>
+          <li><a href="#om-oss">Vårt team</a></li>
+          <li><a href="#priser">Paket</a></li>
+          <li><a class="btn btn-primary btn-sm" href="#kontakt">Boka demo</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main id="top">
+    <section class="hero">
+      <div class="container hero-grid">
+        <div>
+          <span class="badge">AI-agentstudio · Spring Boot (8087) + React/3D</span>
+          <h1>Vi bygger skräddarsydda AI-agenter som avlastar ert företag – idag och i framtiden</h1>
+          <p class="lead">
+            Vårt team designar, bygger och driftsätter säkra AI-agenter för bokningar, mailsvar, kundchatt och
+            sista minuten-erbjudanden. Byggt med Spring Boot, Spring Security, PostgreSQL, React, TypeScript och 3D WebGL.
+          </p>
+          <div class="hero-actions">
+            <a class="btn btn-primary" href="#kontakt">Boka kostnadsfri rådgivning</a>
+            <a class="btn btn-secondary" href="#demo">Testa interaktiv live-demo</a>
+          </div>
+          <div class="trust-row">
+            <span>✓ Publik startsida (ingen inloggning)</span>
+            <span>✓ Live REST API på port 8087</span>
+            <span>✓ GDPR &amp; Spring Security</span>
+          </div>
+        </div>
+
+        <aside class="hero-3d-frame" aria-label="Interaktiv 3D AI-visualisering">
+          <canvas id="heroCanvas" class="hero-3d-canvas"></canvas>
+          <div class="hero-3d-caption">
+            <span>🟢 Spring Boot API: Aktivt (8087)</span>
+            <span>3D Canvas · React/Three.js i /frontend</span>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <section class="section section-alt" id="tjanster">
+      <div class="container">
+        <div class="section-header">
+          <h2>Vad vårt team bygger åt ert företag</h2>
+          <p>Skräddarsydda AI-agenter som underlättar dagens vardag och framtidens lösningar.</p>
+        </div>
+        <div class="grid-4">
+          <article class="card">
+            <div class="card-icon">🗓️</div>
+            <h3>Automatisk bokning</h3>
+            <p>Visar lediga och upptagna tider i realtid direkt kopplat till kalender och databas.</p>
+          </article>
+          <article class="card">
+            <div class="card-icon">✉️</div>
+            <h3>AI-mailsvar 24/7</h3>
+            <p>Svarar snabbt på kundmail dygnet runt och skickar bara komplexa ärenden vidare.</p>
+          </article>
+          <article class="card">
+            <div class="card-icon">💬</div>
+            <h3>Kundchatt</h3>
+            <p>Hjälper besökare på hemsidan med priser, öppettider och direktbokning.</p>
+          </article>
+          <article class="card">
+            <div class="card-icon">⚡</div>
+            <h3>Sista minuten (-50 %)</h3>
+            <p>Omvandlar sena återbud och tomma luckor till rabatterade tider automatiskt.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="branscher">
+      <div class="container">
+        <div class="section-header">
+          <h2>Branscher vi hjälper</h2>
+          <p>Vi börjar med tandläkare &amp; vård och bygger AI-agenter för fler branscher efter behov.</p>
+        </div>
+        <div class="grid-4">
+          <article class="card card-featured">
+            <span class="pill-tag">Huvudfokus</span>
+            <h3>Tandläkare &amp; Vård</h3>
+            <p>Avlasta receptionen med bokningar, återbud och GDPR-trygga flöden.</p>
+          </article>
+          <article class="card">
+            <span class="pill-tag">Skönhet</span>
+            <h3>Frisör &amp; Salong</h3>
+            <p>Slipp avbrott under klippning och fyll luckor med sista minuten-rabatt.</p>
+          </article>
+          <article class="card">
+            <span class="pill-tag">Hälsa</span>
+            <h3>Massage &amp; Naprapati</h3>
+            <p>Svara dygnet runt och minska uteblivna besök med automatiska påminnelser.</p>
+          </article>
+          <article class="card">
+            <span class="pill-tag">Service</span>
+            <h3>Bilverkstad &amp; Fler</h3>
+            <p>Servicebokningar, däckbyte och statusfrågor – skräddarsytt efter er bransch.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section-alt" id="demo">
+      <div class="container">
+        <div class="section-header">
+          <h2>Live-demo kopplad mot Spring Boot API (8087)</h2>
+          <p>Klicka på en grön ledig tid eller gul sista minuten-tid (-50 %) för att testa backend-API:et i realtid!</p>
+        </div>
+        <div class="demo-shell">
+          <div class="card">
+            <div class="demo-controls">
+              <div class="tab-group">
+                <button class="tab-btn active" type="button" data-industry="tandlakare">Tandläkare</button>
+                <button class="tab-btn" type="button" data-industry="frisor">Frisör</button>
+                <button class="tab-btn" type="button" data-industry="massage">Massage</button>
+                <button class="tab-btn" type="button" data-industry="bilverkstad">Bilverkstad</button>
+              </div>
+              <div class="tab-group">
+                <button class="tab-btn active" type="button" data-day="idag">Idag</button>
+                <button class="tab-btn" type="button" data-day="imorgon">Imorgon</button>
+              </div>
+            </div>
+            <div class="legend">
+              <span><span class="legend-dot" data-color="free"></span>Ledig tid</span>
+              <span><span class="legend-dot" data-color="busy"></span>Upptagen</span>
+              <span><span class="legend-dot" data-color="deal"></span>Sista minuten (-50 %)</span>
+            </div>
+            <div class="slots-grid" id="slotsGrid"></div>
+            <div class="demo-feedback" id="demoFeedback" role="status"></div>
+          </div>
+
+          <div class="card chat-box">
+            <h3>AI-kundchatt (Demo)</h3>
+            <div class="chat-log" id="chatLog">
+              <div class="chat-msg chat-bot">Hej! Fråga mig om sista minuten, bokning, priser eller GDPR &amp; Spring Security.</div>
+            </div>
+            <form class="chat-form" id="chatForm">
+              <input id="chatInput" type="text" placeholder="Skriv en testfråga..." maxlength="160">
+              <button class="btn btn-primary btn-sm" type="submit">Skicka</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="om-oss">
+      <div class="container">
+        <div class="section-header">
+          <h2>Teamet bakom era AI-agenter</h2>
+          <p>UI/UX, 3D WebGL, Java/Spring Boot och IT-säkerhet i ett och samma team.</p>
+        </div>
+        <div class="grid-3">
+          <article class="card">
+            <div class="team-avatar">BE</div>
+            <h3>Backend &amp; Databas</h3>
+            <div class="team-role">Java · Spring Boot · PostgreSQL</div>
+            <p>Säkra REST-API:er, kalenderintegrationer och databaslagring med Spring Security.</p>
+          </article>
+          <article class="card">
+            <div class="team-avatar">FE</div>
+            <h3>UI/UX, Frontend &amp; 3D</h3>
+            <div class="team-role">React · TypeScript · Three.js · Blender · Spline</div>
+            <p>Moderna, snabba gränssnitt och interaktiva 3D-upplevelser.</p>
+          </article>
+          <article class="card">
+            <div class="team-avatar">SEC</div>
+            <h3>Säkerhet &amp; DevOps</h3>
+            <div class="team-role">GDPR · NIS2 · Docker · GitHub Actions · Vercel</div>
+            <p>Härdade miljöer, MFA, loggning och incidentberedskap från dag ett.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section-alt" id="priser">
+      <div class="container">
+        <div class="section-header">
+          <h2>Paket &amp; upplägg</h2>
+        </div>
+        <div class="grid-3">
+          <article class="card">
+            <h3>Start</h3>
+            <div class="price-amount">Från 2 900 kr/mån</div>
+            <ul class="check-list">
+              <li>AI-kundchatt 24/7</li>
+              <li>Svar på priser &amp; frågor</li>
+              <li>GDPR-anpassad setup</li>
+            </ul>
+            <a class="btn btn-secondary" href="#kontakt">Välj Start</a>
+          </article>
+          <article class="card card-featured">
+            <span class="pill-tag">Mest populär</span>
+            <h3>Pro</h3>
+            <div class="price-amount">Från 5 900 kr/mån</div>
+            <ul class="check-list">
+              <li>Live kalender-API &amp; bokning</li>
+              <li>Automatiska AI-mailsvar</li>
+              <li>Sista minuten (-50 %)</li>
+            </ul>
+            <a class="btn btn-primary" href="#kontakt">Boka demo för Pro</a>
+          </article>
+          <article class="card">
+            <h3>Företag</h3>
+            <div class="price-amount">Offert</div>
+            <ul class="check-list">
+              <li>Skräddarsydd Spring Boot &amp; AI</li>
+              <li>NIS2-dokumentation &amp; loggning</li>
+              <li>Dedikerat team</li>
+            </ul>
+            <a class="btn btn-secondary" href="#kontakt">Kontakta oss</a>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="kontakt">
+      <div class="container contact-grid">
+        <div>
+          <span class="badge">Live mot databas (POST /api/leads)</span>
+          <h2>Boka demo med vårt team</h2>
+          <p>Skicka en förfrågan så sparas den direkt via Spring Boot API på port 8087!</p>
+          <p>
+            <strong>Kontakt:</strong> <a href="mailto:hej@nordicagent.se">hej@nordicagent.se</a><br>
+            <strong>Säkerhetsincidenter:</strong> <a href="mailto:security@nordicagent.se">security@nordicagent.se</a>
+          </p>
+        </div>
+
+        <div class="card">
+          <form id="contactForm" novalidate>
+            <div class="form-group">
+              <label for="name">Namn *</label>
+              <input id="name" type="text" required placeholder="Anna Andersson">
+            </div>
+            <div class="form-group">
+              <label for="email">E-post *</label>
+              <input id="email" type="email" required placeholder="anna@kliniken.se">
+            </div>
+            <div class="form-group">
+              <label for="company">Företag *</label>
+              <input id="company" type="text" required placeholder="Tandkliniken Centrum">
+            </div>
+            <div class="form-group">
+              <label for="industry">Bransch</label>
+              <select id="industry">
+                <option value="Tandläkare / Vård">Tandläkare / Vård</option>
+                <option value="Frisör / Skönhet">Frisör / Skönhet</option>
+                <option value="Massage / Hälsa">Massage / Hälsa</option>
+                <option value="Bilverkstad / Service">Bilverkstad / Service</option>
+                <option value="Annan bransch">Annan bransch</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="message">Meddelande (valfritt)</label>
+              <textarea id="message" rows="3" placeholder="T.ex. bokning, mailsvar, kundchatt..."></textarea>
+            </div>
+            <label class="checkbox-row">
+              <input id="gdprConsent" type="checkbox" required>
+              <span>Jag godkänner att mina uppgifter behandlas enligt GDPR-integritetspolicyn. *</span>
+            </label>
+            <button class="btn btn-primary" type="submit">Skicka förfrågan</button>
+            <div class="form-status" id="formStatus" role="status"></div>
+          </form>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-bottom">
+      <span>© <span id="year"></span> NordicAgent Studio</span>
+      <span>Publik startsida · Admin-API skyddat med Spring Security (/api/admin/leads)</span>
+    </div>
+  </footer>
+
+  <script src="/script.js" defer></script>
+</body>
+</html>

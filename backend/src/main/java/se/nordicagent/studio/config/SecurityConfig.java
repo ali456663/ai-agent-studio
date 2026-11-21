@@ -48,8 +48,17 @@ public class SecurityConfig {
                 .referrerPolicy(ref -> ref.policy(ReferrerPolicyHeaderWriter.ReferrerPolicy.STRICT_ORIGIN_WHEN_CROSS_ORIGIN))
             )
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers(HttpMethod.GET, "/api/health", "/actuator/health").permitAll()
-                .requestMatchers(HttpMethod.GET, "/api/demo/**").permitAll()
+                .requestMatchers(
+                    "/",
+                    "/index.html",
+                    "/styles.css",
+                    "/script.js",
+                    "/favicon.svg",
+                    "/assets/**",
+                    "/.well-known/**",
+                    "/error"
+                ).permitAll()
+                .requestMatchers(HttpMethod.GET, "/api/health", "/actuator/health", "/api/demo/**").permitAll()
                 .requestMatchers(HttpMethod.POST, "/api/demo/**", "/api/leads").permitAll()
                 .requestMatchers("/api/admin/**").hasRole("ADMIN")
                 .anyRequest().denyAll()
