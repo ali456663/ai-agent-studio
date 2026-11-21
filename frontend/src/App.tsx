@@ -5,6 +5,7 @@ import { DemoSection } from "./components/DemoSection";
 import { EnterpriseAgentsSection } from "./components/EnterpriseAgentsSection";
 import { LegalModal } from "./components/LegalModal";
 import { OrderAgentDemo } from "./components/OrderAgentDemo";
+import { SecurityFirstSection } from "./components/SecurityFirstSection";
 
 const Hero3DCanvas = lazy(() => import("./components/Hero3DCanvas"));
 const COOKIE_KEY = "nordicagent_cookie_notice_ack";
@@ -67,12 +68,12 @@ export default function App() {
 
           <nav aria-label="Huvudmeny">
             <ul className={`nav-links ${menuOpen ? "open" : ""}`} onClick={() => setMenuOpen(false)}>
+              <li><a href="#sakerhet-forst">Säkerhet först</a></li>
               <li><a href="#tjanster">Tjänster</a></li>
               <li><a href="#branscher">Branscher</a></li>
               <li><a href="#demo">Prova demo</a></li>
               <li><a href="#kom-igang">Så kommer ni igång</a></li>
               <li><a href="#priser">Paket</a></li>
-              <li><a href="#faq">FAQ</a></li>
               <li><a className="btn btn-primary btn-sm" href="#kontakt">Boka demo</a></li>
             </ul>
           </nav>
@@ -120,6 +121,9 @@ export default function App() {
             </div>
           </div>
         </section>
+
+        {/* Säkerhet är första steget */}
+        <SecurityFirstSection />
 
         {/* Interaktiv demonstration av Orderagenten */}
         <OrderAgentDemo />
