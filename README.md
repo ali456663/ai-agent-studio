@@ -1,80 +1,70 @@
-# NordicAgent Studio – Fullstack AI-agentbyrå
+# NordicAgent Studio
 
-Fullstack-projekt på **D:-disken** (`D:\aliwa\Projects\ai-agent-studio`) med **Java + Spring Boot + Spring Security + PostgreSQL** (port **8087**) och **React + TypeScript + CSS/HTML + WebGL / Three.js** (redo för **Blender `.glb`** & **Spline**).
+En fullstack-plattform och demomiljö för skräddarsydda AI-agenter riktade mot både små och medelstora företag (kliniker, salonger, bilverkstäder) och större industriverksamheter – byggd med **Säkerhet först** i varje steg.
 
 ---
 
-## Projektstruktur i IntelliJ IDEA
+## Funktioner i plattformen
+
+- **Säkerhet är första steget:** Riskbaserad strategi (*Identifiera → Bedöma → Åtgärda → Verifiera*), GDPR-dataminimering med samtyckesversionering, NIS2-anpassat tänk, härdade containers, rate limiting och incidentberedskap.
+- **Interaktiv Orderagent:** Visar hur en AI-agent läser inkommande beställningar, jämför mot offert, skapar orderutkast och flaggar prisavvikelser för mänskligt godkännande.
+- **Live-kalender & AI-assistent:** Exempelkalender för flera branscher (lediga tider, upptagna tider och sista minuten -50 %) samt en interaktiv AI-assistent där besökare kan dela sin verksamhetsidé live.
+- **Verkliga företagsflöden:** Konkreta exempel för bl.a. bilverkstad (däckhotell, arbetsorder, godkännande av extraarbete, morgonsammanställning) samt inköps-, order-, service-, dokument-, kvalitets- och offertagenter.
+
+---
+
+## Teknikstack
+
+- **Backend & Säkerhet:** Java 21, Spring Boot, Spring Security, JPA / Hibernate, PostgreSQL (med H2-läge för snabb lokal utveckling)
+- **Frontend & 3D:** React, TypeScript, Vite, tillgänglig UI/UX (WCAG, fokusfälla, `prefers-reduced-motion`), WebGL / Three.js (förberett för Blender `.glb` & Spline)
+- **DevOps & CI/CD:** Docker (non-root containers), GitHub Actions (Maven + TypeScript + secret-skanning) & Vercel (CSP, HSTS och säkerhetsheaders)
+
+---
+
+## Projektstruktur
 
 ```text
 ai-agent-studio/
-├── backend/                                        # Java + Spring Boot + Spring Security + PostgreSQL (port 8087)
-│   ├── pom.xml                                     # ← Högerklicka "Add as Maven Project" i IntelliJ IDEA
+├── backend/                    # Java + Spring Boot + Spring Security + PostgreSQL
+│   ├── pom.xml
 │   ├── Dockerfile
 │   └── src/main/
-│       ├── java/se/nordicagent/studio/
-│       │   ├── NordicAgentApplication.java         # ← Starta Spring Boot här!
-│       │   ├── config/SecurityConfig.java          # Spring Security, CORS, BCrypt, Least Privilege
-│       │   ├── controller/                         # /api/health, /api/demo/**, /api/leads, /api/admin/leads
-│       │   ├── dto/                                # Validerade request/response-objekt
-│       │   ├── model/Lead.java                     # JPA-entitet -> PostgreSQL-tabell "leads"
-│       │   ├── repository/LeadRepository.java
-│       │   └── service/
-│       └── resources/application.yml               # Port 8087 + PostgreSQL env vars
-│
-├── frontend/                                       # React + TypeScript + Vite + WebGL/Three.js (Blender & Spline)
+├── frontend/                   # React + TypeScript + Vite + Three.js / WebGL
 │   ├── package.json
-│   ├── vite.config.ts                              # Proxar /api -> http://localhost:8087
-│   ├── vercel.json                                 # Säkerhetsheaders (CSP, HSTS m.m.) för Vercel
-│   ├── public/models/README.md                     # Guide för Blender (.glb) & Spline
+│   ├── vercel.json
 │   └── src/
-│       ├── App.tsx
-│       ├── styles.css
-│       ├── api/client.ts                           # Typad REST-klient mot Spring Boot (8087)
-│       └── components/
-│           ├── Hero3DCanvas.tsx                    # Interaktiv WebGL/Three.js + Blender GLTFLoader + Spline
-│           ├── DemoSection.tsx                     # Kalender-API + AI-chatt
-│           ├── ContactForm.tsx                     # POST /api/leads -> PostgreSQL
-│           └── LegalModal.tsx                      # GDPR & Säkerhet/NIS2
-│
-├── docker-compose.yml                              # PostgreSQL 16 + Backend (8087) + Frontend (3000)
-├── .env.example                                    # Kopiera till .env lokalt
-└── .github/workflows/ci.yml                        # GitHub Actions (Java/Maven + TypeScript/Vite + Security)
+├── docker-compose.yml          # Lokal fullstack-miljö (PostgreSQL + Backend + Frontend)
+├── .env.example                # Mall för lokala miljövariabler
+└── .github/workflows/ci.yml    # Automatiserad CI-pipeline
 ```
 
 ---
 
-## 1. Öppna i IntelliJ IDEA
-1. Öppna `D:\aliwa\Projects\ai-agent-studio` i **IntelliJ IDEA**.
-2. Högerklicka på `backend/pom.xml` → **Add as Maven Project** (så laddar IntelliJ ned Spring Boot, Spring Security och PostgreSQL-drivrutinen automatiskt).
-3. Starta `NordicAgentApplication.java` (kör på **port `8087`**).
+## Kom igång lokalt
 
-## 2. Kör Frontend (React + TypeScript + Three.js)
-Öppna terminalen i IntelliJ IDEA:
-```powershell
-cd D:\aliwa\Projects\ai-agent-studio\frontend
-npm.cmd install
-npm.cmd run dev
+### 1. Klona repot & konfigurera miljövariabler
+```bash
+git clone https://github.com/ali456663/ai-agent-studio.git
+cd ai-agent-studio
+cp .env.example .env
 ```
-Öppna `http://localhost:5173` (alla `/api`-anrop skickas automatiskt till Spring Boot på `http://localhost:8087`).
+*(Fyll i egna starka lösenord i `.env`. Committa aldrig `.env` till Git.)*
 
-## 3. Kör hela stacken med Docker (PostgreSQL + Backend 8087 + Frontend 3000)
-När Docker Desktop är igång:
-```powershell
-copy .env.example .env
+### 2. Starta med Docker
+```bash
 docker compose up --build
 ```
-- Frontend: `http://localhost:3000`
-- Backend API: `http://localhost:8087/api/health`
-- PostgreSQL: `localhost:5432`
 
-## 4. Publicera på GitHub + GitHub Actions + Vercel
-1. Pusha till GitHub:
-   ```powershell
-   git add .
-   git commit -m "Fullstack: Spring Boot (8087) + PostgreSQL + React/TS/Three.js"
-   git branch -M main
-   git push -u origin main
-   ```
-2. På **Vercel**: Importera GitHub-repot, sätt **Root Directory** till `frontend` och klicka **Deploy**.
-   *(När du senare driftar Spring Boot + PostgreSQL publikt, lägg till miljövariabeln `VITE_API_BASE_URL` i Vercel.)*
+### 3. Eller kör manuellt
+- **Backend:** Öppna `backend/pom.xml` som Maven-projekt och kör `NordicAgentApplication`.
+- **Frontend:**
+  ```bash
+  cd frontend
+  npm install
+  npm run dev
+  ```
+
+---
+
+## Säkerhet
+Alla känsliga värden (databasuppgifter, CORS-ursprung och admin-inloggning) hanteras uteslutande via miljövariabler och lagras aldrig i källkoden.

@@ -2,6 +2,7 @@ package se.nordicagent.studio.config;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.UUID;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -95,10 +96,13 @@ public class SecurityConfig {
 
     @Bean
     public UserDetailsService userDetailsService(PasswordEncoder encoder) {
-        // Least Privilege: endast skyddade /api/admin/** kräver ADMIN-roll (ersätt med IdP/MFA i produktion)
+        // Least Privilege: använd alltid ADMIN_PASSWORD via miljövariabel; annars slumpas ett engångslösenord vid start
+        String effectivePassword = (adminPassword == null || adminPassword.isBlank())
+            ? UUID.randomUUID().toString()
+            : adminPassword;
         UserDetails admin = User.builder()
             .username(adminUsername)
-            .password(encoder.encode(adminPassword))
+            .password(encoder.encode(effectivePassword))
             .roles("ADMIN")
             .build();
         return new InMemoryUserDetailsManager(admin);

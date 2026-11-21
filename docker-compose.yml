@@ -30,9 +30,9 @@ services:
       DB_URL: jdbc:postgresql://postgres:5432/${DB_NAME:-nordicagent}
       DB_USER: ${DB_USER:-nordicagent}
       DB_PASSWORD: ${DB_PASSWORD:-change_me_in_env}
-      ADMIN_USER: ${ADMIN_USER:-security-admin}
-      ADMIN_PASSWORD: ${ADMIN_PASSWORD:-ChangeMeStrong12+!}
-      CORS_ALLOWED_ORIGINS: ${CORS_ALLOWED_ORIGINS:-http://localhost:5173,http://localhost:3000,https://nordicagent.se}
+      ADMIN_USER: ${ADMIN_USER:-admin-local}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD:-}
+      CORS_ALLOWED_ORIGINS: ${CORS_ALLOWED_ORIGINS:-http://localhost:5173,http://localhost:3000}
     ports:
       - "8087:8087"
     security_opt:
